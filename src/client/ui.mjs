@@ -6,7 +6,7 @@ import { compressImageFile } from './image-util.mjs'
 
 function dotBackground(variant) {
   const p = PALETTE[variant] || PALETTE.ripple
-  return `linear-gradient(135deg, rgb(${p.morandi}) 0%, ${p.accentL} 100%)`
+  return `linear-gradient(135deg, ${p.accentL} 0%, ${p.motionL[1]} 52%, ${p.motionL[2]} 100%)`
 }
 
 function el(tag, props = {}, children = []) {
@@ -422,7 +422,7 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
             [
               ['layered', '分明书案（与右侧对话区呈温和色差分层）'],
               ['deep', '沉檀深栏（紫禁/紫檀深色侧栏，衬托亮色画布）'],
-              ['seamless', '通透一体（与右侧对话区同色融通）'],
+              ['seamless', '通透一体（无界大连屏 · 左右底纹与光晕全贯通）'],
               ['custom', '自定义侧栏底色'],
             ],
             (v) => patchAndRefresh({ sidebarTone: v, activeMasterPreset: '' }, true)

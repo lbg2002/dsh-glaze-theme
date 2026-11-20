@@ -14,39 +14,44 @@ function glazeTokens(p, dark) {
   --glaze-tx: ${tx};
   --glaze-sidebar-bg: ${sb};
   --glaze-sidebar-deep-bg: ${p.sbDeep};
-  --glaze-bubble-bg: color-mix(in oklch, ${accent} ${dark ? 8 : 6}%, ${bg});
-  --glaze-think-bg: color-mix(in oklch, ${accent} ${dark ? 7 : 5}%, ${bg});
+  --glaze-bubble-bg: ${dark
+    ? `color-mix(in oklch, ${accent} 10%, ${bg})`
+    : `color-mix(in oklch, ${accent} 13%, color-mix(in oklch, ${motion[1]} 6%, ${bg}))`};
+  --glaze-think-bg: ${dark
+    ? `color-mix(in oklch, ${accent} 8%, ${bg})`
+    : `color-mix(in oklch, ${accent} 9%, color-mix(in oklch, ${motion[1]} 5%, ${bg}))`};
   --glaze-motion-1: ${motion[0]};
   --glaze-motion-2: ${motion[1]};
   --glaze-motion-3: ${motion[2]};
-  --glaze-aurora-stream-1: color-mix(in oklch, ${motion[0]}, transparent ${dark ? 58 : 74}%);
-  --glaze-aurora-stream-2: color-mix(in oklch, ${motion[1]}, transparent ${dark ? 58 : 74}%);
-  --glaze-aurora-stream-3: color-mix(in oklch, ${motion[2]}, transparent ${dark ? 58 : 74}%);
-  --glaze-shadow-sm: 0 2px 8px ${dark ? 'rgba(0,0,0,0.38)' : mix(tx, 96)};
-  --glaze-shadow: 0 10px 30px ${dark ? 'rgba(0,0,0,0.48)' : mix(tx, 94)};
-  --glaze-shadow-lg: 0 24px 60px ${dark ? 'rgba(0,0,0,0.58)' : mix(tx, 90)};
+  --glaze-aurora-stream-1: color-mix(in oklch, ${motion[0]}, transparent ${dark ? 56 : 50}%);
+  --glaze-aurora-stream-2: color-mix(in oklch, ${motion[1]}, transparent ${dark ? 56 : 50}%);
+  --glaze-aurora-stream-3: color-mix(in oklch, ${motion[2]}, transparent ${dark ? 56 : 50}%);
+  --glaze-shadow-sm: 0 2px 8px ${dark ? 'rgba(0,0,0,0.38)' : mix(tx, 95)};
+  --glaze-shadow: 0 10px 30px ${dark ? 'rgba(0,0,0,0.48)' : mix(tx, 93)};
+  --glaze-shadow-lg: 0 24px 60px ${dark ? 'rgba(0,0,0,0.58)' : mix(tx, 89)};
   --dsw-alias-state-business-primary: ${accent};
   --dsw-alias-label-deep-diving: ${accent};
   --dsw-alias-label-deep-diving-shimmer: color-mix(in oklch, ${accent}, ${dark ? 'white' : 'black'} 34%);
-  --glaze-hairline: rgba(${m}, 0.30);
-  --glaze-hairline-strong: rgba(${m}, ${dark ? 0.55 : 0.50});
-  --glaze-glow: rgba(${m}, ${dark ? 0.32 : 0.20});
-  --glaze-code-bg: rgba(${m}, ${dark ? 0.16 : 0.13});
+  --glaze-hairline: rgba(${m}, ${dark ? 0.30 : 0.36});
+  --glaze-hairline-strong: rgba(${m}, ${dark ? 0.55 : 0.58});
+  --glaze-glow: rgba(${m}, ${dark ? 0.32 : 0.28});
+  --glaze-code-bg: rgba(${m}, ${dark ? 0.16 : 0.14});
   --glaze-code-fg: ${tx};`
 }
 
 function borderStack(p, dark) {
   const m = p.morandi
   const tx = dark ? p.txD : p.txL
+  const tintL = `color-mix(in oklch, ${p.accentL} 28%, ${tx})`
   return dark
     ? `  --dsw-alias-border-l1: rgba(${m}, 0.10);
   --dsw-alias-border-l2: rgba(${m}, 0.18);
   --dsw-alias-border-l3: rgba(${m}, 0.28);
   --dsw-alias-border-l4: rgba(${m}, 0.40);`
-    : `  --dsw-alias-border-l1: ${mix(tx, 90)};
-  --dsw-alias-border-l2: ${mix(tx, 80)};
-  --dsw-alias-border-l3: ${mix(tx, 70)};
-  --dsw-alias-border-l4: ${mix(tx, 60)};`
+    : `  --dsw-alias-border-l1: ${mix(tintL, 88)};
+  --dsw-alias-border-l2: ${mix(tintL, 78)};
+  --dsw-alias-border-l3: ${mix(tintL, 68)};
+  --dsw-alias-border-l4: ${mix(tintL, 58)};`
 }
 
 function labelStack(p, dark) {

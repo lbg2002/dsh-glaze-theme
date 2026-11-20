@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url'
 
 import { buildAll } from '../scripts/build.mjs'
 import { apply, createConfigHandler } from '../src/index.mjs'
-import { MASTER_PRESETS, PALETTE, VARIANTS, oklchContrastRatio } from '../src/client/palette.mjs'
+import { MASTER_PRESETS, PALETTE, VARIANTS, oklchContrastRatio, parseOklch } from '../src/client/palette.mjs'
 import { buildTokensCSS } from '../src/client/tokens.mjs'
 import { buildCoreCSS, buildUiCSS } from '../src/client/styles.mjs'
 import { DEFAULT_CONFIG, getTimeGreeting, resolveHeroHeadlineText, sanitizeConfig } from '../src/client/defaults.mjs'
@@ -16,12 +16,19 @@ import { DISPLAY_FONTS, resolveFontUrl } from '../src/client/fonts.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
-test('all 16 palettes satisfy WCAG AA (>= 4.5:1) for text & accent on light/dark backgrounds', () => {
+test('all 16 palettes satisfy WCAG AA (>= 4.5:1) and define 3-hue polychromatic motion triads', () => {
   assert.equal(VARIANTS.length, 16)
   for (const key of VARIANTS) {
     const p = PALETTE[key]
     assert.ok(p, `Missing palette ${key}`)
     assert.ok(p.sbL && p.sbD && p.sbDeep, `Missing sidebar tokens in ${key}`)
+    assert.equal(p.motionL?.length, 3, `${key} motionL must have 3 pigments`)
+    assert.equal(p.motionD?.length, 3, `${key} motionD must have 3 pigments`)
+    assert.equal(new Set(p.motionL).size, 3, `${key} motionL pigments must be distinct`)
+    assert.equal(new Set(p.motionD).size, 3, `${key} motionD pigments must be distinct`)
+    for (const c of [...p.motionL, ...p.motionD]) {
+      assert.doesNotThrow(() => parseOklch(c), `Invalid oklch in ${key}: ${c}`)
+    }
     const txLight = oklchContrastRatio(p.txL, p.bgL)
     const txDark = oklchContrastRatio(p.txD, p.bgD)
     const accentLight = oklchContrastRatio(p.accentL, p.bgL)
@@ -50,7 +57,7 @@ test('all 6 Chinese Aesthetic Master Presets sanitize cleanly and match register
   }
 })
 
-test('CSS & bundle contain zero infinite animations, zero @property, zero setInterval polling', () => {
+test('CSS & bundle contain zero infinite animations, true panoramic seamless rules, and zero polling', () => {
   buildAll()
   const tokensCss = buildTokensCSS()
   const coreCss = buildCoreCSS()
@@ -60,6 +67,17 @@ test('CSS & bundle contain zero infinite animations, zero @property, zero setInt
   assert.equal(/\binfinite\b/i.test(combinedCss), false, 'CSS must not use infinite animations')
   assert.equal(/@keyframes\b/i.test(combinedCss), false, 'CSS must not define idle keyframe loops')
   assert.equal(/@property\b/i.test(combinedCss), false, 'CSS must not animate @property custom props')
+
+  // Seamless panoramic sidebar must clear inner SidebarRoot, borders, and hairline shadows
+  assert.ok(coreCss.includes('[class*="_sidebarCol"] [class*="_root"]'), 'Core CSS must clear SidebarRoot background')
+  const seamlessMatch = coreCss.match(
+    /body\[data-glaze-variant\]\[data-glaze-sidebar-tone="seamless"\]\s+\[class\*="_frame"\]:not\(\[data-sidebar-drawer\]\)\s+\[class\*="_sidebarCol"\]\s*\{([^}]+)\}/
+  )
+  assert.ok(seamlessMatch, 'Seamless desktop sidebar rule must exist')
+  assert.ok(seamlessMatch[1].includes('--dsw-specific-sidebar-fill: transparent'), 'Seamless mode must set sidebar-fill token transparent')
+  assert.ok(seamlessMatch[1].includes('background: transparent !important'), 'Seamless mode must enforce transparent background')
+  assert.ok(seamlessMatch[1].includes('border-right: 0 !important'), 'Seamless mode must remove right border')
+  assert.ok(seamlessMatch[1].includes('box-shadow: none !important'), 'Seamless mode must remove hairline box-shadow')
 
   // Default porcelain mode must not enable backdrop-filter except inside opt-in frosted selector
   const nonFrostedLines = coreCss

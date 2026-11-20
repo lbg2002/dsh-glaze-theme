@@ -8,28 +8,28 @@ function svgDataUri(svg) {
 }
 
 const SVG_XUAN_LIGHT = svgDataUri(
-  '<svg xmlns="http://www.w3.org/2000/svg" width="120" height="48" viewBox="0 0 120 48"><path d="M0 12h120M0 36h120" stroke="#4a3f35" stroke-opacity="0.045" stroke-width="0.6"/><circle cx="18" cy="22" r="0.7" fill="#4a3f35" fill-opacity="0.06"/><circle cx="74" cy="8" r="0.6" fill="#4a3f35" fill-opacity="0.05"/><circle cx="102" cy="40" r="0.8" fill="#4a3f35" fill-opacity="0.05"/></svg>'
+  '<svg xmlns="http://www.w3.org/2000/svg" width="120" height="48" viewBox="0 0 120 48"><path d="M0 12h120M0 36h120" stroke="#6b533b" stroke-opacity="0.065" stroke-width="0.6"/><circle cx="18" cy="22" r="0.8" fill="#c59b46" fill-opacity="0.16"/><circle cx="52" cy="14" r="0.6" fill="#6b533b" fill-opacity="0.06"/><circle cx="74" cy="8" r="0.7" fill="#c59b46" fill-opacity="0.15"/><circle cx="102" cy="40" r="0.85" fill="#c59b46" fill-opacity="0.14"/></svg>'
 )
 const SVG_XUAN_DARK = svgDataUri(
   '<svg xmlns="http://www.w3.org/2000/svg" width="120" height="48" viewBox="0 0 120 48"><path d="M0 12h120M0 36h120" stroke="#e8e2d8" stroke-opacity="0.04" stroke-width="0.6"/><circle cx="18" cy="22" r="0.7" fill="#e8e2d8" fill-opacity="0.05"/><circle cx="74" cy="8" r="0.6" fill="#e8e2d8" fill-opacity="0.045"/><circle cx="102" cy="40" r="0.8" fill="#e8e2d8" fill-opacity="0.045"/></svg>'
 )
 
 const SVG_LANDSCAPE_LIGHT = svgDataUri(
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 240" preserveAspectRatio="none"><path d="M0 240V165c120-45 240-15 360-58 110-40 210 10 340-36 140-48 250-12 380-46 130-34 250 8 360-20V240z" fill="#2b3d38" fill-opacity="0.055"/><path d="M0 240V195c160-32 290 14 440-26 150-40 270 12 420-28 160-42 320 6 580-18V240z" fill="#2b3d38" fill-opacity="0.075"/></svg>'
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 260" preserveAspectRatio="none"><path d="M0 260V162c130-46 250-16 370-62 115-42 225 12 350-36 145-52 255-14 390-48 135-34 235 12 330-16V260z" fill="#2d5978" fill-opacity="0.068"/><path d="M0 260V190c165-36 300 12 450-30 155-42 275 10 425-32 160-44 315 8 565-20V260z" fill="#2c6e63" fill-opacity="0.088"/><path d="M0 260V220c190-22 340 16 520-16 180-32 320 14 480-18 160-32 290 10 440-10V260z" fill="#946f3a" fill-opacity="0.055"/></svg>'
 )
 const SVG_LANDSCAPE_DARK = svgDataUri(
   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 240" preserveAspectRatio="none"><path d="M0 240V165c120-45 240-15 360-58 110-40 210 10 340-36 140-48 250-12 380-46 130-34 250 8 360-20V240z" fill="#dbe6e3" fill-opacity="0.045"/><path d="M0 240V195c160-32 290 14 440-26 150-40 270 12 420-28 160-42 320 6 580-18V240z" fill="#dbe6e3" fill-opacity="0.06"/></svg>'
 )
 
 const SVG_LATTICE_LIGHT = svgDataUri(
-  '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none"><path d="M0 32h64M32 0v64M16 16h32v32H16z" stroke="#3c4856" stroke-opacity="0.055" stroke-width="0.8"/><path d="M0 0l16 16M64 0L48 16M0 64l16-16M64 64L48 48" stroke="#3c4856" stroke-opacity="0.04" stroke-width="0.7"/></svg>'
+  '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none"><path d="M0 32h64M32 0v64M16 16h32v32H16z" stroke="#35505e" stroke-opacity="0.078" stroke-width="0.85"/><path d="M0 0l16 16M64 0L48 16M0 64l16-16M64 64L48 48" stroke="#5c4f42" stroke-opacity="0.052" stroke-width="0.7"/><circle cx="32" cy="32" r="1.4" fill="#b08a42" fill-opacity="0.095"/><circle cx="16" cy="16" r="1" fill="#35505e" fill-opacity="0.075"/><circle cx="48" cy="48" r="1" fill="#35505e" fill-opacity="0.075"/></svg>'
 )
 const SVG_LATTICE_DARK = svgDataUri(
   '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none"><path d="M0 32h64M32 0v64M16 16h32v32H16z" stroke="#dfe7f0" stroke-opacity="0.045" stroke-width="0.8"/><path d="M0 0l16 16M64 0L48 16M0 64l16-16M64 64L48 48" stroke="#dfe7f0" stroke-opacity="0.032" stroke-width="0.7"/></svg>'
 )
 
 const SVG_CLOUD_LIGHT = svgDataUri(
-  '<svg xmlns="http://www.w3.org/2000/svg" width="96" height="64" viewBox="0 0 96 64" fill="none"><path d="M12 44c6 0 10-4 14-8 4-4 10-4 14 0s10 4 14 0 10-4 14 0 8 8 16 8M4 22c8 0 10-6 16-6s8 6 14 6 10-6 16-6 10 6 16 6" stroke="#5c4738" stroke-opacity="0.05" stroke-width="1" stroke-linecap="round"/></svg>'
+  '<svg xmlns="http://www.w3.org/2000/svg" width="96" height="64" viewBox="0 0 96 64" fill="none"><path d="M12 44c6 0 10-4 14-8 4-4 10-4 14 0s10 4 14 0 10-4 14 0 8 8 16 8" stroke="#8c583a" stroke-opacity="0.078" stroke-width="1.05" stroke-linecap="round"/><path d="M4 22c8 0 10-6 16-6s8 6 14 6 10-6 16-6 10 6 16 6" stroke="#b8893a" stroke-opacity="0.07" stroke-width="1" stroke-linecap="round"/></svg>'
 )
 const SVG_CLOUD_DARK = svgDataUri(
   '<svg xmlns="http://www.w3.org/2000/svg" width="96" height="64" viewBox="0 0 96 64" fill="none"><path d="M12 44c6 0 10-4 14-8 4-4 10-4 14 0s10 4 14 0 10-4 14 0 8 8 16 8M4 22c8 0 10-6 16-6s8 6 14 6 10-6 16-6 10 6 16 6" stroke="#f0dfc8" stroke-opacity="0.045" stroke-width="1" stroke-linecap="round"/></svg>'
@@ -37,85 +37,128 @@ const SVG_CLOUD_DARK = svgDataUri(
 
 export function buildCoreCSS() {
   return `
-/* ═══ 1. Static Right Conversation Canvas & Chinese Aesthetic Textures (0% idle GPU) ═══ */
+/* ═══ 1. Panoramic Conversation Canvas & Chinese Aesthetic Textures (0% idle GPU) ═══ */
 body[data-glaze-variant] {
   --glaze-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   --glaze-dur-fast: 140ms;
   --glaze-dur: 200ms;
+  --glaze-bracket-color: var(--glaze-hairline-strong);
   --glaze-ambience:
-    radial-gradient(1300px circle at 6% -4%, color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 82%), transparent 52%),
-    radial-gradient(1050px circle at 100% 8%, color-mix(in oklch, var(--glaze-aurora-stream-2), transparent 58%), transparent 60%),
-    radial-gradient(900px circle at 96% 100%, color-mix(in oklch, var(--glaze-aurora-stream-3), transparent 58%), transparent 62%),
-    radial-gradient(950px circle at 2% 96%, color-mix(in oklch, var(--glaze-aurora-stream-1), transparent 58%), transparent 60%);
+    radial-gradient(1250px circle at 4% 6%, color-mix(in oklch, var(--glaze-aurora-stream-1), transparent 30%), transparent 56%),
+    radial-gradient(1120px circle at 96% 8%, color-mix(in oklch, var(--glaze-aurora-stream-2), transparent 32%), transparent 58%),
+    radial-gradient(1040px circle at 92% 96%, color-mix(in oklch, var(--glaze-aurora-stream-3), transparent 32%), transparent 60%),
+    radial-gradient(960px circle at 14% 92%, color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 66%), transparent 58%),
+    radial-gradient(920px circle at 54% 42%, color-mix(in oklch, var(--glaze-aurora-stream-2), transparent 56%), transparent 66%);
+  --glaze-canvas-image: var(--glaze-ambience);
+  --glaze-canvas-repeat: no-repeat;
+  --glaze-canvas-pos: center;
+  --glaze-canvas-size: cover;
+}
+body[data-ds-dark-theme][data-glaze-variant] {
+  --glaze-ambience:
+    radial-gradient(1300px circle at 4% 4%, color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 80%), transparent 54%),
+    radial-gradient(1080px circle at 96% 8%, color-mix(in oklch, var(--glaze-aurora-stream-2), transparent 54%), transparent 60%),
+    radial-gradient(940px circle at 92% 96%, color-mix(in oklch, var(--glaze-aurora-stream-3), transparent 54%), transparent 62%),
+    radial-gradient(960px circle at 10% 94%, color-mix(in oklch, var(--glaze-aurora-stream-1), transparent 56%), transparent 60%),
+    radial-gradient(880px circle at 54% 44%, color-mix(in oklch, var(--glaze-aurora-stream-2), transparent 72%), transparent 68%);
 }
 body[data-glaze-variant][data-glaze-pattern="ambience"] {
-  background-attachment: fixed;
-  background-image: var(--glaze-ambience);
-}
-body[data-glaze-variant][data-glaze-pattern="none"] {
-  background-image: none;
+  --glaze-canvas-image: var(--glaze-ambience);
+  --glaze-canvas-repeat: no-repeat;
+  --glaze-canvas-pos: center;
+  --glaze-canvas-size: cover;
 }
 body[data-glaze-variant][data-glaze-pattern="xuan-paper"] {
-  background-attachment: fixed;
-  background-image: ${SVG_XUAN_LIGHT}, var(--glaze-ambience);
-  background-repeat: repeat, no-repeat;
+  --glaze-canvas-image: ${SVG_XUAN_LIGHT}, var(--glaze-ambience);
+  --glaze-canvas-repeat: repeat, no-repeat;
+  --glaze-canvas-pos: top left, center;
+  --glaze-canvas-size: 120px 48px, cover;
 }
 body[data-ds-dark-theme][data-glaze-variant][data-glaze-pattern="xuan-paper"] {
-  background-image: ${SVG_XUAN_DARK}, var(--glaze-ambience);
+  --glaze-canvas-image: ${SVG_XUAN_DARK}, var(--glaze-ambience);
 }
 body[data-glaze-variant][data-glaze-pattern="landscape"] {
-  background-attachment: fixed;
-  background-image: ${SVG_LANDSCAPE_LIGHT}, var(--glaze-ambience);
-  background-repeat: no-repeat, no-repeat;
-  background-position: bottom center, center;
-  background-size: 100% 240px, cover;
+  --glaze-canvas-image: ${SVG_LANDSCAPE_LIGHT}, var(--glaze-ambience);
+  --glaze-canvas-repeat: no-repeat, no-repeat;
+  --glaze-canvas-pos: bottom center, center;
+  --glaze-canvas-size: 100% 260px, cover;
 }
 body[data-ds-dark-theme][data-glaze-variant][data-glaze-pattern="landscape"] {
-  background-image: ${SVG_LANDSCAPE_DARK}, var(--glaze-ambience);
+  --glaze-canvas-image: ${SVG_LANDSCAPE_DARK}, var(--glaze-ambience);
+  --glaze-canvas-size: 100% 240px, cover;
 }
 body[data-glaze-variant][data-glaze-pattern="lattice"] {
-  background-attachment: fixed;
-  background-image: ${SVG_LATTICE_LIGHT}, var(--glaze-ambience);
-  background-repeat: repeat, no-repeat;
+  --glaze-canvas-image: ${SVG_LATTICE_LIGHT}, var(--glaze-ambience);
+  --glaze-canvas-repeat: repeat, no-repeat;
+  --glaze-canvas-pos: top left, center;
+  --glaze-canvas-size: 64px 64px, cover;
 }
 body[data-ds-dark-theme][data-glaze-variant][data-glaze-pattern="lattice"] {
-  background-image: ${SVG_LATTICE_DARK}, var(--glaze-ambience);
+  --glaze-canvas-image: ${SVG_LATTICE_DARK}, var(--glaze-ambience);
 }
 body[data-glaze-variant][data-glaze-pattern="cloud"] {
-  background-attachment: fixed;
-  background-image: ${SVG_CLOUD_LIGHT}, var(--glaze-ambience);
-  background-repeat: repeat, no-repeat;
+  --glaze-canvas-image: ${SVG_CLOUD_LIGHT}, var(--glaze-ambience);
+  --glaze-canvas-repeat: repeat, no-repeat;
+  --glaze-canvas-pos: top left, center;
+  --glaze-canvas-size: 96px 64px, cover;
 }
 body[data-ds-dark-theme][data-glaze-variant][data-glaze-pattern="cloud"] {
-  background-image: ${SVG_CLOUD_DARK}, var(--glaze-ambience);
+  --glaze-canvas-image: ${SVG_CLOUD_DARK}, var(--glaze-ambience);
+}
+body[data-glaze-variant]:not([data-glaze-pattern="none"]) {
+  background-attachment: fixed;
+  background-image: var(--glaze-canvas-image);
+  background-repeat: var(--glaze-canvas-repeat);
+  background-position: var(--glaze-canvas-pos);
+  background-size: var(--glaze-canvas-size);
+}
+body[data-glaze-variant][data-glaze-pattern="none"] {
+  --glaze-canvas-image: none;
+  background-image: none;
 }
 
-/* Transparent pass-through for center column shells */
+/* Transparent pass-through for center column & layout shells */
 body[data-glaze-variant] [class*="_frame"],
 body[data-glaze-variant] [class*="_centerCol"],
-body[data-glaze-variant] [class*="_root"]:has([class*="_scrollBody"]),
-body[data-glaze-variant] [class*="_scrollBody"] {
-  background-color: transparent;
-  background-image: none;
+body[data-glaze-variant] [class*="_mainPanel"],
+body[data-glaze-variant] [class*="_centerCol"] [class*="_root"][data-phase],
+body[data-glaze-variant] [class*="_scrollBody"],
+body[data-glaze-variant] [data-shell-bottom] {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+body[data-glaze-variant]:not([data-glaze-pattern="none"]) [class*="_pageBar"][data-natural]::before {
+  background-color: var(--dsw-alias-bg-layer-1, #fff);
+  background-image: var(--glaze-canvas-image, var(--glaze-ambience));
+  background-repeat: var(--glaze-canvas-repeat, no-repeat);
+  background-position: var(--glaze-canvas-pos, center);
+  background-size: var(--glaze-canvas-size, cover);
+  background-attachment: fixed;
 }
 
-/* Sticky composer seat seamless fade */
+/* Sticky composer seat seamless fade (active chat only; Hero remains completely open) */
 body[data-glaze-variant] [class*="_root"] [class*="_composerSeat"] {
-  background-image: none;
+  background: transparent !important;
+  background-image: none !important;
 }
-body[data-glaze-variant]:not([data-glaze-pattern="none"]) [class*="_root"] [class*="_composerSeat"]::before {
+body[data-glaze-variant]:not([data-glaze-pattern="none"]) [data-phase="active"] [class*="_composerSeat"]::before,
+body[data-glaze-variant]:not([data-glaze-pattern="none"]) [data-content-phase="active"] [class*="_composerSeat"]::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: -1;
   pointer-events: none;
   background-color: var(--dsw-alias-bg-layer-1, #101010);
-  background-image: var(--glaze-ambience);
+  background-image: var(--glaze-canvas-image, var(--glaze-ambience));
+  background-repeat: var(--glaze-canvas-repeat, no-repeat);
+  background-position: var(--glaze-canvas-pos, center);
+  background-size: var(--glaze-canvas-size, cover);
   background-attachment: fixed;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 56px);
   mask-image: linear-gradient(to bottom, transparent 0, #000 56px);
 }
-body[data-glaze-variant][data-glaze-pattern="none"] [class*="_root"] [class*="_composerSeat"]::before {
+body[data-glaze-variant][data-glaze-pattern="none"] [data-phase="active"] [class*="_composerSeat"]::before,
+body[data-glaze-variant][data-glaze-pattern="none"] [data-content-phase="active"] [class*="_composerSeat"]::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -126,26 +169,30 @@ body[data-glaze-variant][data-glaze-pattern="none"] [class*="_root"] [class*="_c
   mask-image: linear-gradient(to bottom, transparent 0, #000 56px);
 }
 
-/* ═══ 2. Left Sidebar Architectural Tones ═══ */
-body[data-glaze-variant] [class*="_sidebarCol"] > div {
-  background-color: transparent;
+/* ═══ 2. Left Sidebar Architectural Tones (incl. True Seamless Panoramic Canvas) ═══ */
+body[data-glaze-variant] [class*="_sidebarCol"] > *,
+body[data-glaze-variant] [class*="_sidebarCol"] [class*="_root"] {
+  background: transparent !important;
+  background-color: transparent !important;
 }
 body[data-glaze-variant] [class*="_sidebarCol"] {
+  --dsw-specific-sidebar-fill: var(--glaze-sidebar-bg);
   position: relative;
   border-right: 0;
   background-color: var(--glaze-sidebar-bg);
   background-image: linear-gradient(
     180deg,
-    color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 94%),
-    transparent 160px
+    color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 88%),
+    transparent 180px
   );
   background-repeat: no-repeat;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.22),
     1px 0 0 var(--glaze-hairline),
     20px 0 36px -22px color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 52%);
 }
 body[data-glaze-variant][data-glaze-sidebar-tone="deep"] [class*="_sidebarCol"] {
+  --dsw-specific-sidebar-fill: var(--glaze-sidebar-deep-bg);
   background-color: var(--glaze-sidebar-deep-bg);
   background-image: linear-gradient(
     180deg,
@@ -187,12 +234,39 @@ body[data-glaze-variant][data-glaze-sidebar-tone="custom"][data-glaze-sidebar-da
   --dsw-alias-label-dimmed: oklch(48% 0.02 240);
   --dsw-alias-menu-icon: oklch(32% 0.02 240);
 }
-body[data-glaze-variant][data-glaze-sidebar-tone="seamless"] [class*="_sidebarCol"] {
-  background-color: transparent;
-  background-image: none;
-  box-shadow: 1px 0 0 var(--glaze-hairline);
+body[data-glaze-variant][data-glaze-sidebar-tone="seamless"] [class*="_frame"]:not([data-sidebar-drawer]) [class*="_sidebarCol"] {
+  --dsw-specific-sidebar-fill: transparent;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border-right: 0 !important;
+  border-left: 0 !important;
+  box-shadow: none !important;
+}
+body[data-glaze-variant][data-glaze-sidebar-tone="seamless"] [class*="_frame"]:not([data-sidebar-drawer]) [class*="_sidebarCol"]::before,
+body[data-glaze-variant][data-glaze-sidebar-tone="seamless"] [class*="_frame"]:not([data-sidebar-drawer]) [class*="_sidebarCol"] [class*="_scrollFade"] {
+  display: none !important;
+}
+body[data-glaze-variant][data-glaze-sidebar-tone="seamless"] [class*="_frame"]:not([data-sidebar-drawer]) [class*="_sidebarCol"] [class*="_footerActions"] {
+  background: transparent !important;
+  border-top: 0 !important;
+  box-shadow: none !important;
+}
+body[data-glaze-variant][data-glaze-sidebar-tone="seamless"] [class*="_frame"]:not([data-sidebar-drawer])::before {
+  background: transparent !important;
+}
+body[data-glaze-variant][data-glaze-sidebar-tone="seamless"] [class*="_frame"]:not([data-sidebar-drawer]) [class*="_centerCol"] {
+  border-left: 0 !important;
+  border-radius: 0 !important;
+}
+body[data-glaze-variant][data-glaze-sidebar-tone="seamless"] [class*="_frame"][data-sidebar-drawer] [class*="_sidebarCol"] {
+  --dsw-specific-sidebar-fill: var(--glaze-bg);
+  background-color: var(--glaze-bg) !important;
+  background-image: var(--glaze-ambience) !important;
+  box-shadow: var(--glaze-shadow-lg) !important;
 }
 body[data-glaze-variant][data-glaze-sidebar-tone="custom"] [class*="_sidebarCol"] {
+  --dsw-specific-sidebar-fill: var(--glaze-user-sidebar-bg, var(--glaze-sidebar-bg));
   background-color: var(--glaze-user-sidebar-bg, var(--glaze-sidebar-bg));
 }
 
@@ -326,19 +400,20 @@ body[data-glaze-variant] [data-composer-input]:focus-visible {
 
 body[data-glaze-variant] div[class*="_composer"] div[class*="_card"] {
   position: relative;
-  border: 1px solid var(--glaze-hairline);
+  border: 1px solid color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 62%);
   border-radius: 16px;
-  background-color: color-mix(in oklch, var(--dsw-alias-bg-layer-1, #fff), var(--dsw-alias-bg-layer-2, #fff) 55%);
+  background-color: color-mix(in oklch, white 68%, var(--glaze-bg));
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.30),
-    0 1px 2px -1px rgba(0, 0, 0, 0.14),
-    0 16px 44px -20px rgba(0, 0, 0, 0.22),
-    0 0 36px -16px color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 76%);
+    inset 0 1px 0 rgba(255,255,255,0.72),
+    0 2px 6px -1px color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 88%),
+    0 18px 46px -18px color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 72%),
+    0 0 40px -14px color-mix(in oklch, var(--glaze-motion-2, var(--glaze-accent, #4e8c97)), transparent 68%);
   transition:
     border-color var(--glaze-dur) var(--glaze-ease),
     box-shadow var(--glaze-dur) var(--glaze-ease);
 }
 body[data-ds-dark-theme][data-glaze-variant] div[class*="_composer"] div[class*="_card"] {
+  border-color: var(--glaze-hairline);
   background-color: color-mix(in oklch, var(--dsw-alias-bg-layer-1, #101010), var(--dsw-alias-bg-layer-2, #181818) 65%);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.11),
@@ -350,26 +425,29 @@ body[data-glaze-variant] div[class*="_composer"] div[class*="_card"]:hover {
   border-color: var(--glaze-hairline-strong);
 }
 body[data-glaze-variant] div[class*="_composer"] div[class*="_card"]:focus-within {
-  border-color: var(--glaze-hairline-strong);
+  border-color: color-mix(in oklch, var(--glaze-accent), transparent 36%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.32),
+    inset 0 1px 0 rgba(255,255,255,0.45),
     0 0 0 2px color-mix(in oklch, var(--glaze-accent) 26%, transparent),
-    0 18px 48px -18px rgba(0, 0, 0, 0.28),
-    0 0 54px -16px color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 68%);
+    0 18px 48px -18px rgba(0, 0, 0, 0.22),
+    0 0 54px -16px color-mix(in oklch, var(--glaze-motion-2, var(--glaze-accent, #4e8c97)), transparent 60%);
 }
 
 /* Composer variant: xuan-scroll (文人花笺 4-corner L-brackets) */
+body:not([data-ds-dark-theme])[data-glaze-variant] {
+  --glaze-bracket-color: color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 36%);
+}
 body[data-glaze-variant][data-glaze-composer="xuan-scroll"] div[class*="_composer"] div[class*="_card"] {
   border-radius: 10px;
   background-image:
-    linear-gradient(var(--glaze-hairline-strong), var(--glaze-hairline-strong)),
-    linear-gradient(var(--glaze-hairline-strong), var(--glaze-hairline-strong)),
-    linear-gradient(var(--glaze-hairline-strong), var(--glaze-hairline-strong)),
-    linear-gradient(var(--glaze-hairline-strong), var(--glaze-hairline-strong)),
-    linear-gradient(var(--glaze-hairline-strong), var(--glaze-hairline-strong)),
-    linear-gradient(var(--glaze-hairline-strong), var(--glaze-hairline-strong)),
-    linear-gradient(var(--glaze-hairline-strong), var(--glaze-hairline-strong)),
-    linear-gradient(var(--glaze-hairline-strong), var(--glaze-hairline-strong));
+    linear-gradient(var(--glaze-bracket-color), var(--glaze-bracket-color)),
+    linear-gradient(var(--glaze-bracket-color), var(--glaze-bracket-color)),
+    linear-gradient(var(--glaze-bracket-color), var(--glaze-bracket-color)),
+    linear-gradient(var(--glaze-bracket-color), var(--glaze-bracket-color)),
+    linear-gradient(var(--glaze-bracket-color), var(--glaze-bracket-color)),
+    linear-gradient(var(--glaze-bracket-color), var(--glaze-bracket-color)),
+    linear-gradient(var(--glaze-bracket-color), var(--glaze-bracket-color)),
+    linear-gradient(var(--glaze-bracket-color), var(--glaze-bracket-color));
   background-size:
     12px 1.5px, 1.5px 12px,
     12px 1.5px, 1.5px 12px,
@@ -390,16 +468,16 @@ body[data-glaze-variant][data-glaze-composer="imperial-seal"] div[class*="_compo
   box-shadow:
     inset 0 0 0 3px var(--dsw-alias-bg-layer-1),
     inset 0 0 0 4px var(--glaze-hairline),
-    0 18px 46px -20px rgba(0, 0, 0, 0.35);
+    0 18px 46px -20px color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 58%);
 }
 
 /* Composer variant: floating-jade (悬浮流云) */
 body[data-glaze-variant][data-glaze-composer="floating-jade"] div[class*="_composer"] div[class*="_card"] {
   border-radius: 24px;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.22),
-    0 20px 56px -18px rgba(0, 0, 0, 0.34),
-    0 0 48px -16px color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 68%);
+    inset 0 1px 0 rgba(255,255,255,0.28),
+    0 20px 56px -18px color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 64%),
+    0 0 48px -16px color-mix(in oklch, var(--glaze-motion-2, var(--glaze-accent, #4e8c97)), transparent 62%);
 }
 
 body[data-glaze-variant][data-glaze-surface="frosted"] div[class*="_composer"] div[class*="_card"] {
@@ -428,11 +506,24 @@ body[data-glaze-variant][data-glaze-send-btn="seal"] [data-composer-card] button
 body[data-glaze-variant][data-glaze-send-btn="jade-pill"] [data-composer-card] button[class*="_primary"] {
   border-radius: 10px !important;
 }
+body:not([data-ds-dark-theme])[data-glaze-variant] [data-composer-card] button[class*="_primary"]:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    var(--glaze-accent),
+    color-mix(in oklch, var(--glaze-motion-2, var(--glaze-accent)), black 24%)
+  );
+}
+body:not([data-ds-dark-theme])[data-glaze-variant] [data-composer-card] button[class*="_primary"]:disabled {
+  background: color-mix(in oklch, var(--glaze-accent), white 82%);
+  border: 1px solid color-mix(in oklch, var(--glaze-accent), transparent 62%);
+  color: color-mix(in oklch, var(--glaze-accent), var(--glaze-tx) 35%);
+  opacity: 0.92;
+}
 
 /* ═══ 5. Message Bubbles (Strictly div[class*="_bubble"], preserving span tooltip) ═══ */
 body[data-glaze-variant] div[class*="_bubble"] {
   border-radius: 14px;
-  border: 1px solid color-mix(in oklch, var(--glaze-hairline, rgba(146,168,179,0.25)), transparent 35%);
+  border: 1px solid color-mix(in oklch, var(--glaze-hairline, rgba(146,168,179,0.25)), transparent 25%);
   box-shadow: var(--glaze-shadow-sm);
 }
 body[data-glaze-variant][data-glaze-bubble="letter-paper"] div[class*="_bubble"] {
@@ -446,7 +537,7 @@ body[data-glaze-variant][data-glaze-bubble="ink-outline"] div[class*="_bubble"] 
   box-shadow: none !important;
 }
 
-/* ═══ 6. Chrome, Header Tabs, Sidebar Rows, Menus & Markdown Polish ═══ */
+/* ═══ 6. Chrome, Header Tabs, Sidebar Rows, Light Mode Tints & Markdown Polish ═══ */
 body[data-glaze-variant] div[class*="_dock"]:has(> [class*="_preview"]) {
   background: color-mix(in oklch, var(--dsw-alias-bg-layer-2, #fff), transparent 10%);
   border: 1px solid var(--glaze-hairline);
@@ -467,6 +558,23 @@ body[data-glaze-variant] div[class*="_tabs"] {
   background-color: transparent;
   box-shadow: inset 0 -1px 0 var(--glaze-hairline, rgba(146,168,179,0.28));
 }
+body[data-glaze-variant][data-glaze-sidebar-tone="seamless"] [class*="_frame"]:not([data-sidebar-drawer]) [class*="_header"]:has(> [class*="_tabs"]) {
+  box-shadow: none !important;
+  border-bottom: 0 !important;
+}
+body[data-glaze-variant][data-glaze-sidebar-tone="seamless"] [class*="_frame"]:not([data-sidebar-drawer]) div[class*="_tabs"] {
+  box-shadow: none !important;
+  background-image: linear-gradient(
+    90deg,
+    transparent 0px,
+    var(--glaze-hairline) 40px,
+    var(--glaze-hairline) calc(100% - 40px),
+    transparent 100%
+  ) !important;
+  background-size: 100% 1px !important;
+  background-position: bottom !important;
+  background-repeat: no-repeat !important;
+}
 
 body[data-glaze-variant] [class*="_sidebarCol"] [role="treeitem"],
 body[data-glaze-variant] [class*="_sidebarCol"] [class*="_sessionRow"] {
@@ -475,22 +583,33 @@ body[data-glaze-variant] [class*="_sidebarCol"] [class*="_sessionRow"] {
 }
 body[data-glaze-variant] [class*="_sidebarCol"] [class*="_sessionRow"]:hover,
 body[data-glaze-variant] [class*="_sidebarCol"] [role="treeitem"]:hover {
-  background: color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 90%);
+  background: color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 88%);
   transform: translateX(2px);
 }
 body[data-glaze-variant] [class*="_sidebarCol"] [class*="_sessionRow"][class*="_selected"],
 body[data-glaze-variant] [class*="_sidebarCol"] [class*="_sessionRow"][class*="_active"],
 body[data-glaze-variant] [class*="_sidebarCol"] [class*="_sessionRow"][aria-selected="true"],
 body[data-glaze-variant] [class*="_sidebarCol"] [role="treeitem"][aria-selected="true"] {
-  background: color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 88%);
+  background: color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 84%);
   font-weight: 500;
+}
+body:not([data-ds-dark-theme])[data-glaze-variant]:not([data-glaze-sidebar-tone="deep"]):not([data-glaze-sidebar-dark="1"]) [class*="_sidebarCol"] [class*="_sessionRow"][class*="_selected"],
+body:not([data-ds-dark-theme])[data-glaze-variant]:not([data-glaze-sidebar-tone="deep"]):not([data-glaze-sidebar-dark="1"]) [class*="_sidebarCol"] [class*="_sessionRow"][class*="_active"],
+body:not([data-ds-dark-theme])[data-glaze-variant]:not([data-glaze-sidebar-tone="deep"]):not([data-glaze-sidebar-dark="1"]) [class*="_sidebarCol"] [class*="_sessionRow"][aria-selected="true"],
+body:not([data-ds-dark-theme])[data-glaze-variant]:not([data-glaze-sidebar-tone="deep"]):not([data-glaze-sidebar-dark="1"]) [class*="_sidebarCol"] [role="treeitem"][aria-selected="true"] {
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 80%),
+    color-mix(in oklch, var(--glaze-motion-2, var(--glaze-accent, #4e8c97)), transparent 87%)
+  );
+  box-shadow: inset 2.5px 0 0 var(--glaze-accent);
 }
 body[data-glaze-variant] [class*="_sidebarCol"] button[class*="_newSession"],
 body[data-glaze-variant] [class*="_sidebarCol"] button[class*="_newChat"],
 body[data-glaze-variant] [class*="_sessionLogButton"],
 body[data-glaze-variant] .dsh-glaze-trigger {
   border-color: transparent;
-  background: color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 90%);
+  background: color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 88%);
   border-radius: 10px;
   transition: background var(--glaze-dur-fast) var(--glaze-ease), transform var(--glaze-dur-fast) var(--glaze-ease);
 }
@@ -498,8 +617,42 @@ body[data-glaze-variant] [class*="_sidebarCol"] button[class*="_newSession"]:hov
 body[data-glaze-variant] [class*="_sidebarCol"] button[class*="_newChat"]:hover,
 body[data-glaze-variant] [class*="_sessionLogButton"]:hover,
 body[data-glaze-variant] .dsh-glaze-trigger:hover {
-  background: color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 82%);
+  background: color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 80%);
   transform: translateY(-1px);
+}
+body:not([data-ds-dark-theme])[data-glaze-variant]:not([data-glaze-sidebar-tone="deep"]):not([data-glaze-sidebar-dark="1"]) [class*="_sidebarCol"] button[class*="_newSession"],
+body:not([data-ds-dark-theme])[data-glaze-variant]:not([data-glaze-sidebar-tone="deep"]):not([data-glaze-sidebar-dark="1"]) [class*="_sidebarCol"] button[class*="_newChat"],
+body:not([data-ds-dark-theme])[data-glaze-variant]:not([data-glaze-sidebar-tone="deep"]):not([data-glaze-sidebar-dark="1"]) [class*="_sessionLogButton"] {
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--glaze-accent), white 84%),
+    color-mix(in oklch, var(--glaze-motion-2, var(--glaze-accent)), white 87%)
+  );
+  border: 1px solid color-mix(in oklch, var(--glaze-accent), transparent 68%);
+  color: color-mix(in oklch, var(--glaze-accent), var(--glaze-tx) 42%);
+}
+body:not([data-ds-dark-theme])[data-glaze-variant]:not([data-glaze-sidebar-tone="deep"]):not([data-glaze-sidebar-dark="1"]) [class*="_sidebarCol"] button[class*="_newSession"]:hover,
+body:not([data-ds-dark-theme])[data-glaze-variant]:not([data-glaze-sidebar-tone="deep"]):not([data-glaze-sidebar-dark="1"]) [class*="_sidebarCol"] button[class*="_newChat"]:hover,
+body:not([data-ds-dark-theme])[data-glaze-variant]:not([data-glaze-sidebar-tone="deep"]):not([data-glaze-sidebar-dark="1"]) [class*="_sessionLogButton"]:hover {
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--glaze-accent), white 76%),
+    color-mix(in oklch, var(--glaze-motion-2, var(--glaze-accent)), white 80%)
+  );
+}
+body:not([data-ds-dark-theme])[data-glaze-variant] .dsh-glaze-trigger {
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--glaze-accent), white 84%),
+    color-mix(in oklch, var(--glaze-motion-2, var(--glaze-accent)), white 88%)
+  );
+  border: 1px solid color-mix(in oklch, var(--glaze-accent), transparent 64%);
+  color: var(--glaze-tx);
+}
+body:not([data-ds-dark-theme])[data-glaze-variant] [class*="_heroWorkspaceRow"] button,
+body:not([data-ds-dark-theme])[data-glaze-variant] [class*="_headline"] [class*="_previewBadge"] {
+  background: color-mix(in oklch, var(--glaze-accent), white 88%);
+  border: 1px solid color-mix(in oklch, var(--glaze-accent), transparent 72%);
 }
 body[data-glaze-variant] [class*="_footerActions"] {
   border-top: 0;
