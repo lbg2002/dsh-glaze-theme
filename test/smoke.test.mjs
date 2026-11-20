@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url'
 
 import { buildAll } from '../scripts/build.mjs'
 import { apply, createConfigHandler } from '../src/index.mjs'
-import { PALETTE, VARIANTS, oklchContrastRatio } from '../src/client/palette.mjs'
+import { MASTER_PRESETS, PALETTE, VARIANTS, oklchContrastRatio } from '../src/client/palette.mjs'
 import { buildTokensCSS } from '../src/client/tokens.mjs'
 import { buildCoreCSS, buildUiCSS } from '../src/client/styles.mjs'
 import { DEFAULT_CONFIG, getTimeGreeting, resolveHeroHeadlineText, sanitizeConfig } from '../src/client/defaults.mjs'
@@ -16,11 +16,12 @@ import { DISPLAY_FONTS, resolveFontUrl } from '../src/client/fonts.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
-test('all 10 palettes satisfy WCAG AA (>= 4.5:1) for text & accent on light/dark backgrounds', () => {
-  assert.equal(VARIANTS.length, 10)
+test('all 16 palettes satisfy WCAG AA (>= 4.5:1) for text & accent on light/dark backgrounds', () => {
+  assert.equal(VARIANTS.length, 16)
   for (const key of VARIANTS) {
     const p = PALETTE[key]
     assert.ok(p, `Missing palette ${key}`)
+    assert.ok(p.sbL && p.sbD && p.sbDeep, `Missing sidebar tokens in ${key}`)
     const txLight = oklchContrastRatio(p.txL, p.bgL)
     const txDark = oklchContrastRatio(p.txD, p.bgD)
     const accentLight = oklchContrastRatio(p.accentL, p.bgL)
@@ -30,6 +31,22 @@ test('all 10 palettes satisfy WCAG AA (>= 4.5:1) for text & accent on light/dark
     assert.ok(txDark >= 4.5, `${key} dark text contrast ${txDark.toFixed(2)} < 4.5`)
     assert.ok(accentLight >= 4.5, `${key} light accent contrast ${accentLight.toFixed(2)} < 4.5`)
     assert.ok(accentDark >= 4.5, `${key} dark accent contrast ${accentDark.toFixed(2)} < 4.5`)
+  }
+})
+
+test('all 6 Chinese Aesthetic Master Presets sanitize cleanly and match registered options', () => {
+  assert.equal(MASTER_PRESETS.length, 6)
+  for (const preset of MASTER_PRESETS) {
+    const sanitized = sanitizeConfig(preset.patch)
+    assert.equal(sanitized.activeMasterPreset, preset.id)
+    assert.equal(sanitized.variant, preset.patch.variant)
+    assert.equal(sanitized.sidebarTone, preset.patch.sidebarTone)
+    assert.equal(sanitized.canvasPattern, preset.patch.canvasPattern)
+    assert.equal(sanitized.thinkingStyle, preset.patch.thinkingStyle)
+    assert.equal(sanitized.composerStyle, preset.patch.composerStyle)
+    assert.equal(sanitized.sendButtonStyle, preset.patch.sendButtonStyle)
+    assert.equal(sanitized.bubbleStyle, preset.patch.bubbleStyle)
+    assert.equal(sanitized.displayFont, preset.patch.displayFont)
   }
 })
 
@@ -56,24 +73,45 @@ test('CSS & bundle contain zero infinite animations, zero @property, zero setInt
   assert.ok(clientBundle.includes('__ModuleLoader__.load'), 'Client bundle must register with __ModuleLoader__')
   assert.ok(clientBundle.includes('id: PLUGIN_ID') || clientBundle.includes('id: "dsh-glaze-theme"'), 'Bundle must declare plugin id')
   assert.ok(clientBundle.includes('exports.apply'), 'Bundle must export apply()')
+  assert.ok(clientBundle.includes('[data-conversation-header-corner]'), 'Bundle must support header corner mounting to avoid overlap')
 })
 
-test('sanitizeConfig & greeting resolvers handle invalid values and presets safely', () => {
+test('sanitizeConfig & greeting resolvers handle deep UI fields, clamping & presets safely', () => {
   const dirty = sanitizeConfig({
     variant: 'non-existent',
     surfaceMode: 'invalid',
+    sidebarTone: 'bogus',
+    canvasPattern: 'bogus',
+    thinkingStyle: 'bogus',
+    composerStyle: 'bogus',
+    sendButtonStyle: 'bogus',
+    bubbleStyle: 'bogus',
     customAccent: 'not-a-color',
+    customSidebarBg: 'red',
+    customChatBg: '#1A2B3C',
     headlineSizePx: 999,
+    brandFontSizePx: 4,
     brandName: '  My\nStudio  ',
     brandIconImage: 'javascript:alert(1)',
+    thinkingKaiti: true,
   })
 
   assert.equal(dirty.variant, DEFAULT_CONFIG.variant)
   assert.equal(dirty.surfaceMode, 'glaze')
+  assert.equal(dirty.sidebarTone, 'layered')
+  assert.equal(dirty.canvasPattern, 'ambience')
+  assert.equal(dirty.thinkingStyle, 'scroll-note')
+  assert.equal(dirty.composerStyle, 'porcelain')
+  assert.equal(dirty.sendButtonStyle, 'round')
+  assert.equal(dirty.bubbleStyle, 'glaze')
   assert.equal(dirty.customAccent, '')
+  assert.equal(dirty.customSidebarBg, '')
+  assert.equal(dirty.customChatBg, '#1a2b3c')
   assert.equal(dirty.headlineSizePx, 42)
+  assert.equal(dirty.brandFontSizePx, 12)
   assert.equal(dirty.brandName, 'My Studio')
   assert.equal(dirty.brandIconImage, '')
+  assert.equal(dirty.thinkingKaiti, true)
 
   const poemCfg = sanitizeConfig({ variant: 'lapis', heroHeadlineMode: 'poem' })
   assert.equal(resolveHeroHeadlineText(poemCfg), '碧海青天夜夜心')
@@ -102,40 +140,36 @@ test('Node apply() never throws without webServer & /__glaze/config handles GET/
   const baseUrl = `http://127.0.0.1:${port}`
 
   try {
-    // 1. Initial GET returns config: null
     let r = await fetch(`${baseUrl}/__glaze/config`)
     assert.equal(r.status, 200)
     let json = await r.json()
     assert.deepEqual(json, { ok: true, config: null })
 
-    // 2. Cross-origin POST is rejected with 403
     r = await fetch(`${baseUrl}/__glaze/config`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
         origin: 'http://evil.example',
       },
-      body: JSON.stringify({ config: { variant: 'lapis' } }),
+      body: JSON.stringify({ config: { variant: 'lanting' } }),
     })
     assert.equal(r.status, 403)
 
-    // 3. Same-origin POST persists config
     r = await fetch(`${baseUrl}/__glaze/config`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
         origin: baseUrl,
       },
-      body: JSON.stringify({ config: { variant: 'lapis', brandName: '砚台' } }),
+      body: JSON.stringify({ config: { variant: 'lanting', brandName: '砚台', brandFontSizePx: 20 } }),
     })
     assert.equal(r.status, 200)
     assert.deepEqual(await r.json(), { ok: true })
 
-    // 4. Subsequent GET returns saved config
     r = await fetch(`${baseUrl}/__glaze/config`)
     assert.equal(r.status, 200)
     json = await r.json()
-    assert.deepEqual(json, { ok: true, config: { variant: 'lapis', brandName: '砚台' } })
+    assert.deepEqual(json, { ok: true, config: { variant: 'lanting', brandName: '砚台', brandFontSizePx: 20 } })
   } finally {
     await new Promise((resolve) => server.close(resolve))
     rmSync(tmpDir, { recursive: true, force: true })

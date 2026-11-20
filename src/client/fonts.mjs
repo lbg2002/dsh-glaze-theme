@@ -1,7 +1,6 @@
 /**
  * Artistic / Calligraphic font presets and lightweight on-demand <link> loader.
- * Only injects a stylesheet <link> for the active preset; switches back to system
- * fonts cleanly remove the injected <link> tag.
+ * Also loads LXGW WenKai automatically when `thinkingKaiti` is enabled.
  */
 
 export const FONT_CDNS = {
@@ -169,17 +168,22 @@ function syncFontLink(linkId, href) {
   document.head.appendChild(link)
 }
 
-/**
- * Load only the active webfont stylesheet(s); avoid loading unused fonts.
- */
 export function syncActiveFontLinks(config) {
   const displayPreset = DISPLAY_FONTS[config.displayFont] || DISPLAY_FONTS.default
   const bodyPreset = BODY_FONTS[config.bodyFont] || BODY_FONTS.default
   const displayHref = resolveFontUrl(displayPreset, config.fontCdn)
   let bodyHref = resolveFontUrl(bodyPreset, config.fontCdn)
-  if (bodyHref && bodyHref === displayHref) {
-    bodyHref = null
+  if (bodyHref && bodyHref === displayHref) bodyHref = null
+
+  let kaitiHref = null
+  if (config.thinkingKaiti) {
+    const wenkaiHref = resolveFontUrl(DISPLAY_FONTS['lxgw-wenkai'], config.fontCdn)
+    if (wenkaiHref !== displayHref && wenkaiHref !== bodyHref) {
+      kaitiHref = wenkaiHref
+    }
   }
+
   syncFontLink('dsh-glaze-font-display', displayHref)
   syncFontLink('dsh-glaze-font-body', bodyHref)
+  syncFontLink('dsh-glaze-font-kaiti', kaitiHref)
 }

@@ -88,8 +88,17 @@ export function applyConfigToDOM(config) {
 
   body.dataset.glazeVariant = config.variant
   body.dataset.glazeSurface = config.surfaceMode
-  body.dataset.glazeAmbience = config.ambienceEnabled ? '1' : '0'
+  body.dataset.glazePattern = config.canvasPattern
+  body.dataset.glazeSidebarTone = config.sidebarTone
+  body.dataset.glazeThinking = config.thinkingStyle
+  body.dataset.glazeComposer = config.composerStyle
+  body.dataset.glazeSendBtn = config.sendButtonStyle
+  body.dataset.glazeBubble = config.bubbleStyle
   body.dataset.glazeHeadlineStyle = config.headlineStyle
+  body.dataset.glazeBrandStyle = config.brandStyle
+
+  if (config.thinkingKaiti) body.dataset.glazeThinkingKaiti = '1'
+  else delete body.dataset.glazeThinkingKaiti
 
   if (config.customAccent) {
     body.dataset.glazeCustomAccent = '1'
@@ -102,10 +111,28 @@ export function applyConfigToDOM(config) {
     body.style.removeProperty('--glaze-user-accent-fg')
   }
 
-  // Fonts
+  if (config.sidebarTone === 'custom' && config.customSidebarBg) {
+    body.style.setProperty('--glaze-user-sidebar-bg', config.customSidebarBg)
+    const sbFg = pickTextColorForHex(config.customSidebarBg)
+    body.dataset.glazeSidebarDark = sbFg === '#ffffff' ? '1' : '0'
+  } else {
+    body.style.removeProperty('--glaze-user-sidebar-bg')
+    delete body.dataset.glazeSidebarDark
+  }
+
+  if (config.customChatBg) {
+    body.dataset.glazeCustomChatBg = '1'
+    body.style.setProperty('--glaze-user-chat-bg', config.customChatBg)
+  } else {
+    delete body.dataset.glazeCustomChatBg
+    body.style.removeProperty('--glaze-user-chat-bg')
+  }
+
+  // Fonts & Sizes
   syncActiveFontLinks(config)
   body.style.setProperty('--glaze-display-font', resolveDisplayFontFamily(config))
   body.style.setProperty('--glaze-headline-size', `${config.headlineSizePx}px`)
+  body.style.setProperty('--glaze-brand-size', `${config.brandFontSizePx}px`)
   const bodyFont = resolveBodyFontFamily(config)
   if (bodyFont) {
     body.dataset.glazeBodyFont = '1'
@@ -264,14 +291,13 @@ function installLightweightHeaderWatcher() {
   if (window.__dshGlazeHeaderObserver__) return
   let rafPending = false
   const obs = new MutationObserver(() => {
-    // O(1) fast path: skip completely when switcher is already mounted inside a real header
-    const switcher = document.querySelector('.dsh-glaze-switcher')
-    if (switcher && !switcher.hasAttribute('data-floating') && document.contains(switcher)) return
+    const ui = ensureUI()
+    if (!ui.needsHostSync()) return
     if (rafPending) return
     rafPending = true
     requestAnimationFrame(() => {
       rafPending = false
-      ensureUI().ensureSwitcherMounted()
+      ui.ensureSwitcherMounted()
     })
   })
   obs.observe(document.body, { childList: true, subtree: true })
@@ -293,7 +319,6 @@ function bootGlazeTheme() {
     ui.ensureSwitcherMounted()
     installLightweightHeaderWatcher()
 
-    // Sync from server storage once on load (non-blocking)
     fetchServerConfig().then((remote) => {
       if (!remote) return
       currentConfig = remote
@@ -307,10 +332,8 @@ function bootGlazeTheme() {
   else document.addEventListener('DOMContentLoaded', mount, { once: true })
 }
 
-// Execute immediately so CSS tokens apply before DSH shell renders
 bootGlazeTheme()
 
-// Register with DSH client module loader
 if (typeof window !== 'undefined' && window.__ModuleLoader__ && typeof window.__ModuleLoader__.load === 'function') {
   window.__ModuleLoader__.load({
     id: PLUGIN_ID,

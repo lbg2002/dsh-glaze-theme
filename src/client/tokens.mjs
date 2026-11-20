@@ -6,11 +6,16 @@ function glazeTokens(p, dark) {
   const m = p.morandi
   const motion = dark ? p.motionD : p.motionL
   const accent = dark ? p.accentD : p.accentL
+  const sb = dark ? p.sbD : p.sbL
   return `
   --glaze-morandi: ${m};
   --glaze-accent: ${accent};
   --glaze-bg: ${bg};
   --glaze-tx: ${tx};
+  --glaze-sidebar-bg: ${sb};
+  --glaze-sidebar-deep-bg: ${p.sbDeep};
+  --glaze-bubble-bg: color-mix(in oklch, ${accent} ${dark ? 8 : 6}%, ${bg});
+  --glaze-think-bg: color-mix(in oklch, ${accent} ${dark ? 7 : 5}%, ${bg});
   --glaze-motion-1: ${motion[0]};
   --glaze-motion-2: ${motion[1]};
   --glaze-motion-3: ${motion[2]};
@@ -21,6 +26,8 @@ function glazeTokens(p, dark) {
   --glaze-shadow: 0 10px 30px ${dark ? 'rgba(0,0,0,0.48)' : mix(tx, 94)};
   --glaze-shadow-lg: 0 24px 60px ${dark ? 'rgba(0,0,0,0.58)' : mix(tx, 90)};
   --dsw-alias-state-business-primary: ${accent};
+  --dsw-alias-label-deep-diving: ${accent};
+  --dsw-alias-label-deep-diving-shimmer: color-mix(in oklch, ${accent}, ${dark ? 'white' : 'black'} 34%);
   --glaze-hairline: rgba(${m}, 0.30);
   --glaze-hairline-strong: rgba(${m}, ${dark ? 0.55 : 0.50});
   --glaze-glow: rgba(${m}, ${dark ? 0.32 : 0.20});
@@ -87,7 +94,7 @@ function sharedDswTokens(p, dark) {
 }
 
 function mistLight(p) {
-  const { accentL: aL, bgL, txL, sfL, sf2L } = p
+  const { accentL: aL, bgL, txL, sfL, sf2L, sbL } = p
   return `
 body:not([data-glaze-variant]), body[data-glaze-variant="mist"] {${glazeTokens(p, false)}${sharedDswTokens(p, false)}
   --dsw-alias-bg-base: ${bgL};
@@ -136,13 +143,13 @@ ${borderStack(p, false)}
   --dsw-alias-scrollbar-bg-l2: ${mix(txL, 80)};
   --dsw-alias-scrollbar-hover-l1: ${mix(txL, 82)};
   --dsw-alias-scrollbar-hover-l2: ${mix(txL, 72)};
-  --dsw-specific-bubble: color-mix(in oklch, ${bgL}, ${txL} 3%);
+  --dsw-specific-bubble: var(--glaze-bubble-bg);
   --dsw-specific-bubble-highlight: ${mix(aL, 88)};
   --dsw-specific-input-major: ${bgL};
   --dsw-specific-login-input: ${sfL};
   --dsw-specific-menu: ${sf2L};
   --dsw-specific-selector: ${sfL};
-  --dsw-specific-sidebar-fill: color-mix(in oklch, ${bgL}, ${txL} 5%);
+  --dsw-specific-sidebar-fill: ${sbL};
   --dsw-specific-sidebar-nav-item-active-accent: ${mix(aL, 86)};
   --dsw-specific-sidebar-nav-item-active: ${mix(aL, 93)};
   --dsw-specific-sidebar-nav-item-hover: ${mix(txL, 95)};
@@ -151,7 +158,7 @@ ${borderStack(p, false)}
 }
 
 function mistDark(p) {
-  const { accentD: aD, bgD, txD, sfD, sf2D } = p
+  const { accentD: aD, bgD, txD, sfD, sf2D, sbD } = p
   return `
 body[data-ds-dark-theme]:not([data-glaze-variant]), body[data-ds-dark-theme][data-glaze-variant="mist"] {${glazeTokens(p, true)}${sharedDswTokens(p, true)}
   --dsw-alias-bg-base: ${bgD};
@@ -192,7 +199,7 @@ ${borderStack(p, true)}
   --dsw-alias-interactive-bg-hover-solid: ${mix(aD, 82)};
   --dsw-alias-interactive-bg-active: ${mix(aD, 86)};
   --dsw-alias-markdown-inline-code: var(--glaze-code-bg);
-  --dsw-alias-markdown-code-block: oklch(24% 0.02 240);
+  --dsw-alias-markdown-code-block: color-mix(in oklch, ${bgD}, black 14%);
   --dsw-alias-markdown-tag: ${mix(aD, 85)};
   --dsw-alias-markdown-placeholder: ${mix(txD, 40)};
   --dsw-alias-markdown-citation: ${mix(txD, 35)};
@@ -200,13 +207,13 @@ ${borderStack(p, true)}
   --dsw-alias-scrollbar-bg-l2: ${mix(txD, 76)};
   --dsw-alias-scrollbar-hover-l1: ${mix(txD, 75)};
   --dsw-alias-scrollbar-hover-l2: ${mix(txD, 65)};
-  --dsw-specific-bubble: color-mix(in oklch, ${bgD}, white 3%);
+  --dsw-specific-bubble: var(--glaze-bubble-bg);
   --dsw-specific-bubble-highlight: ${mix(aD, 82)};
   --dsw-specific-input-major: ${bgD};
   --dsw-specific-login-input: ${sfD};
   --dsw-specific-menu: ${sf2D};
   --dsw-specific-selector: ${sfD};
-  --dsw-specific-sidebar-fill: color-mix(in oklch, ${bgD}, black 7%);
+  --dsw-specific-sidebar-fill: ${sbD};
   --dsw-specific-sidebar-nav-item-active-accent: ${mix(aD, 80)};
   --dsw-specific-sidebar-nav-item-active: ${mix(aD, 88)};
   --dsw-specific-sidebar-nav-item-hover: ${mix(txD, 95)};
@@ -221,6 +228,7 @@ function variantBlock(v, dark) {
   const tx = dark ? p.txD : p.txL
   const sf = dark ? p.sfD : p.sfL
   const sf2 = dark ? p.sf2D : p.sf2L
+  const sb = dark ? p.sbD : p.sbL
   const sel = dark
     ? `body[data-ds-dark-theme][data-glaze-variant="${v}"]`
     : `body[data-glaze-variant="${v}"]`
@@ -272,13 +280,13 @@ ${labelStack(p, dark)}
 ${borderStack(p, dark)}
   --dsw-alias-markdown-placeholder: ${mix(tx, dark ? 40 : 50)};
   --dsw-alias-markdown-citation: ${mix(tx, dark ? 35 : 55)};
-  --dsw-specific-bubble: color-mix(in oklch, ${bg}, ${tx} ${dark ? 4 : 3}%);
+  --dsw-specific-bubble: var(--glaze-bubble-bg);
   --dsw-specific-bubble-highlight: ${mix(a, dark ? 82 : 88)};
   --dsw-specific-input-major: ${bg};
   --dsw-specific-login-input: ${sf};
   --dsw-specific-menu: ${sf2};
   --dsw-specific-selector: ${sf};
-  --dsw-specific-sidebar-fill: color-mix(in oklch, ${bg}, ${dark ? 'black' : tx} ${dark ? 7 : 5}%);
+  --dsw-specific-sidebar-fill: ${sb};
   --dsw-specific-sidebar-nav-item-active-accent: ${mix(a, dark ? 80 : 86)};
   --dsw-specific-sidebar-nav-item-active: ${mix(a, dark ? 88 : 93)};
   --dsw-specific-sidebar-nav-item-hover: ${mix(tx, dark ? 95 : 95)};
@@ -286,12 +294,14 @@ ${borderStack(p, dark)}
 }`
 }
 
-function customAccentOverrideBlock() {
+function customColorOverridesBlock() {
   return `
 body[data-glaze-variant][data-glaze-custom-accent="1"] {
   --glaze-accent: var(--glaze-user-accent);
   --dsw-alias-brand-primary: var(--glaze-user-accent);
   --dsw-alias-state-business-primary: var(--glaze-user-accent);
+  --dsw-alias-label-deep-diving: var(--glaze-user-accent);
+  --dsw-alias-label-deep-diving-shimmer: color-mix(in oklch, var(--glaze-user-accent), white 36%);
   --dsw-alias-state-business-tertiary: color-mix(in oklch, var(--glaze-user-accent), var(--glaze-bg) 82%);
   --dsw-alias-button-primary-fill: var(--glaze-user-accent);
   --dsw-alias-button-primary-hover: color-mix(in oklch, var(--glaze-user-accent), black 10%);
@@ -302,6 +312,12 @@ body[data-glaze-variant][data-glaze-custom-accent="1"] {
 }
 body[data-ds-dark-theme][data-glaze-variant][data-glaze-custom-accent="1"] {
   --dsw-alias-button-primary-hover: color-mix(in oklch, var(--glaze-user-accent), white 10%);
+}
+body[data-glaze-variant][data-glaze-custom-chat-bg="1"] {
+  --glaze-bg: var(--glaze-user-chat-bg);
+  --dsw-alias-bg-base: var(--glaze-user-chat-bg);
+  --dsw-alias-bg-layer-1: var(--glaze-user-chat-bg);
+  --dsw-specific-input-major: color-mix(in oklch, var(--glaze-user-chat-bg), var(--glaze-tx) 3%);
 }`
 }
 
@@ -310,6 +326,6 @@ export function buildTokensCSS() {
   for (const v of OTHER_VARIANTS) {
     blocks.push(variantBlock(v, false), variantBlock(v, true))
   }
-  blocks.push(customAccentOverrideBlock())
+  blocks.push(customColorOverridesBlock())
   return blocks.join('\n')
 }

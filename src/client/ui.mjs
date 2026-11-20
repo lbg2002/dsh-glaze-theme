@@ -1,4 +1,4 @@
-import { PALETTE, VARIANTS, VARIANT_LABELS } from './palette.mjs'
+import { MASTER_PRESETS, PALETTE, VARIANTS, VARIANT_LABELS } from './palette.mjs'
 import { BODY_FONTS, DISPLAY_FONTS, resolveFontUrl } from './fonts.mjs'
 import { DEFAULT_CONFIG, sanitizeConfig } from './defaults.mjs'
 import { currentIsDark, setAppearanceMode } from './appearance.mjs'
@@ -35,23 +35,28 @@ function el(tag, props = {}, children = []) {
   return node
 }
 
-export function findSwitcherHost() {
+export function findSwitcherTarget() {
   const header =
     document.querySelector('header[class*="_header"]') ||
     document.querySelector('header')
-  if (!header) return null
-  return (
-    header.querySelector('[class*="_headerUtilities"]') ||
-    header.querySelector('[class*="_headerActions"]') ||
-    null
-  )
+  if (header) {
+    const utilities = header.querySelector('[class*="_headerUtilities"]')
+    if (utilities) return { host: utilities, mode: 'utilities' }
+
+    const corner = header.querySelector('[data-conversation-header-corner]')
+    if (corner) return { host: corner, mode: 'corner' }
+
+    const titleRow = header.querySelector('[class*="_titleRow"]')
+    if (titleRow) return { host: titleRow, mode: 'titleRow' }
+  }
+  return { host: document.body || null, mode: 'floating' }
 }
 
 export function createUIController({ getConfig, updateConfig, resetConfig, onStatus }) {
   let switcherRoot = null
   let menuOpen = false
   let modalBackdrop = null
-  let activeTab = 'palette'
+  let activeTab = 'master'
 
   const closeMenu = () => {
     menuOpen = false
@@ -64,13 +69,19 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
   const syncSwitcherVisuals = () => {
     if (!switcherRoot) return
     const cfg = getConfig()
+    const activeMaster = cfg.activeMasterPreset
+      ? MASTER_PRESETS.find((m) => m.id === cfg.activeMasterPreset)
+      : null
     const info = VARIANT_LABELS[cfg.variant] || VARIANT_LABELS.ripple
     const dot = switcherRoot.querySelector('.dsh-glaze-trigger .dsh-glaze-dot')
     const label = switcherRoot.querySelector('.dsh-glaze-trigger__name')
     if (dot) dot.setAttribute('style', `background:${dotBackground(cfg.variant)}`)
-    if (label) label.textContent = info.zh
+    if (label) label.textContent = activeMaster ? activeMaster.name : info.zh
 
-    for (const btn of switcherRoot.querySelectorAll('.dsh-glaze-option')) {
+    for (const btn of switcherRoot.querySelectorAll('.dsh-glaze-master-chip')) {
+      btn.setAttribute('data-active', String(btn.dataset.master === cfg.activeMasterPreset))
+    }
+    for (const btn of switcherRoot.querySelectorAll('.dsh-glaze-swatch')) {
       const on = btn.dataset.variant === cfg.variant
       btn.setAttribute('data-active', String(on))
       btn.setAttribute('aria-checked', String(on))
@@ -95,7 +106,7 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
         className: 'dsh-glaze-trigger',
         'aria-haspopup': 'true',
         'aria-expanded': 'false',
-        title: '瓷釉主题与品牌设置',
+        title: '瓷釉主题与深度 UI 定制',
         onClick: (e) => {
           e.stopPropagation()
           menuOpen = !menuOpen
@@ -110,7 +121,25 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
       ]
     )
 
-    const grid = el('div', { className: 'dsh-glaze-grid', role: 'radiogroup', 'aria-label': '莫兰迪配色' })
+    const masterRow = el(
+      'div',
+      { className: 'dsh-glaze-master-mini' },
+      MASTER_PRESETS.map((preset) =>
+        el('button', {
+          type: 'button',
+          className: 'dsh-glaze-master-chip',
+          text: preset.name,
+          title: preset.desc,
+          dataset: { master: preset.id, active: String(cfg.activeMasterPreset === preset.id) },
+          onClick: () => {
+            updateConfig(preset.patch)
+            syncSwitcherVisuals()
+          },
+        })
+      )
+    )
+
+    const grid = el('div', { className: 'dsh-glaze-grid', role: 'radiogroup', 'aria-label': '16色瓷釉色板' })
     for (const v of VARIANTS) {
       const lbl = VARIANT_LABELS[v]
       grid.appendChild(
@@ -118,46 +147,48 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
           'button',
           {
             type: 'button',
-            className: 'dsh-glaze-option',
+            className: 'dsh-glaze-swatch',
             role: 'radio',
+            title: `${lbl.zh} · ${lbl.poem}`,
             dataset: { variant: v, active: String(v === cfg.variant) },
             'aria-checked': String(v === cfg.variant),
             onClick: () => {
-              updateConfig({ variant: v })
+              updateConfig({ variant: v, activeMasterPreset: '' })
               syncSwitcherVisuals()
             },
           },
           [
             el('span', { className: 'dsh-glaze-dot', style: `background:${dotBackground(v)}` }),
-            el('span', { className: 'dsh-glaze-option__text' }, [
-              el('span', { className: 'dsh-glaze-option__name', text: lbl.zh }),
-              el('span', { className: 'dsh-glaze-option__poem', text: lbl.poem }),
-            ]),
+            el('span', { text: lbl.zh, style: 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;' }),
           ]
         )
       )
     }
 
-    const appearRow = el('div', { className: 'dsh-glaze-appear' }, [
-      ['light', '浅色'],
-      ['dark', '深色'],
-      ['system', '跟随系统'],
-    ].map(([mode, text]) =>
-      el('button', {
-        type: 'button',
-        text,
-        dataset: { mode },
-        onClick: async () => {
-          await setAppearanceMode(mode)
-          syncSwitcherVisuals()
-        },
-      })
-    ))
+    const appearRow = el(
+      'div',
+      { className: 'dsh-glaze-appear' },
+      [
+        ['light', '浅色'],
+        ['dark', '深色'],
+        ['system', '跟随系统'],
+      ].map(([mode, text]) =>
+        el('button', {
+          type: 'button',
+          text,
+          dataset: { mode },
+          onClick: async () => {
+            await setAppearanceMode(mode)
+            syncSwitcherVisuals()
+          },
+        })
+      )
+    )
 
     const ctaBtn = el('button', {
       type: 'button',
       className: 'dsh-glaze-menu__cta',
-      text: '✦ 品牌 / 字体 / 个性化设置',
+      text: '✦ 深度 UI 与品牌定制面板',
       onClick: () => {
         closeMenu()
         openModal()
@@ -169,37 +200,47 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
         el('strong', { text: '瓷釉 Glaze' }),
         el('span', { text: '零模糊低耗版' }),
       ]),
+      el('div', { className: 'dsh-glaze-subhead', text: '东方意境全案（一键联动）' }),
+      masterRow,
+      el('div', { className: 'dsh-glaze-subhead', text: '16 色瓷釉色板（仅换色）' }),
       grid,
       appearRow,
       ctaBtn,
     ])
 
-    const root = el('div', { className: 'dsh-glaze-switcher' }, [trigger, menu])
-    return root
+    return el('div', { className: 'dsh-glaze-switcher' }, [trigger, menu])
   }
 
   const ensureSwitcherMounted = () => {
     if (typeof document === 'undefined' || !document.body) return
-    const host = findSwitcherHost()
-    if (switcherRoot && document.contains(switcherRoot)) {
-      if (host && switcherRoot.parentElement !== host) {
-        switcherRoot.removeAttribute('data-floating')
-        host.prepend(switcherRoot)
-      }
-      return
-    }
+    const { host, mode } = findSwitcherTarget()
+    if (!host) return
     if (!switcherRoot) switcherRoot = buildSwitcher()
-    if (host) {
-      switcherRoot.removeAttribute('data-floating')
+
+    const alreadyInTarget =
+      document.contains(switcherRoot) &&
+      switcherRoot.parentElement === host &&
+      switcherRoot.dataset.hostMode === mode
+    if (alreadyInTarget) return
+
+    switcherRoot.dataset.hostMode = mode
+    if (mode === 'floating') switcherRoot.setAttribute('data-floating', '1')
+    else switcherRoot.removeAttribute('data-floating')
+
+    if (mode === 'utilities' || mode === 'corner') {
       host.prepend(switcherRoot)
     } else {
-      switcherRoot.setAttribute('data-floating', '1')
-      document.body.appendChild(switcherRoot)
+      host.appendChild(switcherRoot)
     }
     syncSwitcherVisuals()
   }
 
-  // Click-outside dismissal registered once
+  const needsHostSync = () => {
+    if (!switcherRoot || !document.contains(switcherRoot)) return true
+    const { host, mode } = findSwitcherTarget()
+    return switcherRoot.dataset.hostMode !== mode || switcherRoot.parentElement !== host
+  }
+
   if (typeof document !== 'undefined' && !window.__dshGlazeOutsideBound__) {
     window.__dshGlazeOutsideBound__ = true
     document.addEventListener('click', (e) => {
@@ -208,13 +249,16 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
     })
   }
 
-  // ── 4-Tab Settings Modal ────────────────────────────────────────
+  // ── 5-Tab Deep Customizer Modal ────────────────────────────────────────
   const renderModal = () => {
     if (!modalBackdrop) return
     const cfg = getConfig()
     modalBackdrop.textContent = ''
 
-    const statusLine = el('span', { className: 'dsh-glaze-status', text: '配置已自动持久化到本地与 ~/.dsh/glaze-theme.json' })
+    const statusLine = el('span', {
+      className: 'dsh-glaze-status',
+      text: '配置已自动持久化至浏览器与 ~/.dsh/glaze-theme.json',
+    })
     const setStatus = (msg) => {
       statusLine.textContent = msg
       onStatus?.(msg)
@@ -227,13 +271,11 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
       if (rerender) renderModal()
     }
 
-    const makeRow = (labelText, control, hintText) => {
-      const wrap = el('div', {}, [
+    const makeRow = (labelText, control, hintText) =>
+      el('div', { style: 'margin-bottom:10px;' }, [
         el('div', { className: 'dsh-glaze-row' }, [el('label', { text: labelText }), control]),
         hintText ? el('p', { className: 'dsh-glaze-hint', text: hintText }) : null,
       ])
-      return wrap
-    }
 
     const makeSelect = (value, options, onChange) => {
       const sel = el('select', { className: 'dsh-glaze-select' })
@@ -250,6 +292,48 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
       const inp = el('input', { type: 'text', className: 'dsh-glaze-input', value: value || '', placeholder })
       inp.addEventListener('input', () => onInput(inp.value))
       return inp
+    }
+
+    const makeColorField = (currentHex, defaultHex, key, placeholderText) => {
+      const picker = el('input', {
+        type: 'color',
+        value: currentHex || defaultHex,
+        style: 'width:38px;height:34px;border:none;background:transparent;cursor:pointer;padding:0;',
+        onInput: (e) => patchAndRefresh({ [key]: e.target.value }, false),
+      })
+      const hexInp = makeTextInput(currentHex, placeholderText, (val) => {
+        const trimmed = val.trim()
+        if (!trimmed || /^#[0-9a-fA-F]{6}$/.test(trimmed)) {
+          patchAndRefresh({ [key]: trimmed }, false)
+        }
+      })
+      const resetBtn = el('button', {
+        type: 'button',
+        className: 'dsh-glaze-btn',
+        text: '跟随主题',
+        onClick: () => patchAndRefresh({ [key]: '' }, true),
+      })
+      return el('div', { style: 'display:flex;gap:8px;flex:1;align-items:center;' }, [picker, hexInp, resetBtn])
+    }
+
+    const makeSliderRow = (labelText, value, min, max, key, hintText) => {
+      const readout = el('span', {
+        text: `${value}px`,
+        style: 'min-width:44px;text-align:right;font-size:12.5px;',
+      })
+      const range = el('input', {
+        type: 'range',
+        min,
+        max,
+        value,
+        style: 'flex:1;',
+        onInput: (e) => {
+          const num = Number(e.target.value)
+          readout.textContent = `${num}px`
+          patchAndRefresh({ [key]: num }, false)
+        },
+      })
+      return makeRow(labelText, el('div', { style: 'display:flex;align-items:center;gap:10px;flex:1;' }, [range, readout]), hintText)
     }
 
     const makeImageUploader = (currentImg, onUploaded, onClear) => {
@@ -273,7 +357,30 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
       ])
     }
 
-    // Tab 1: 配色与质感
+    // ── Tab 1: 意境与色板 ────────────────────────────────────────────────
+    const masterGrid = el(
+      'div',
+      { className: 'dsh-glaze-master-grid' },
+      MASTER_PRESETS.map((preset) =>
+        el(
+          'button',
+          {
+            type: 'button',
+            className: 'dsh-glaze-master-card',
+            dataset: { active: String(cfg.activeMasterPreset === preset.id) },
+            onClick: () => patchAndRefresh(preset.patch, true),
+          },
+          [
+            el('div', { className: 'dsh-glaze-master-card__top' }, [
+              el('span', { className: 'dsh-glaze-dot', style: `background:${dotBackground(preset.patch.variant)}` }),
+              el('span', { text: preset.name }),
+            ]),
+            el('div', { className: 'dsh-glaze-master-card__desc', text: preset.desc }),
+          ]
+        )
+      )
+    )
+
     const paletteGrid = el('div', { className: 'dsh-glaze-palette-grid' })
     for (const v of VARIANTS) {
       const lbl = VARIANT_LABELS[v]
@@ -284,7 +391,7 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
             type: 'button',
             className: 'dsh-glaze-option',
             dataset: { variant: v, active: String(v === cfg.variant) },
-            onClick: () => patchAndRefresh({ variant: v }, true),
+            onClick: () => patchAndRefresh({ variant: v, activeMasterPreset: '' }, true),
           },
           [
             el('span', { className: 'dsh-glaze-dot', style: `background:${dotBackground(v)}` }),
@@ -297,67 +404,146 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
       )
     }
 
-    const accentPicker = el('input', {
-      type: 'color',
-      value: cfg.customAccent || '#4e8c97',
-      style: 'width:38px;height:34px;border:none;background:transparent;cursor:pointer;padding:0;',
-      onInput: (e) => patchAndRefresh({ customAccent: e.target.value }, false),
-    })
-    const accentHex = makeTextInput(cfg.customAccent, '留空则跟随当前配色（如 #3b82f6）', (val) => {
-      const trimmed = val.trim()
-      if (!trimmed || /^#[0-9a-fA-F]{6}$/.test(trimmed)) {
-        patchAndRefresh({ customAccent: trimmed }, false)
-      }
-    })
-    const accentReset = el('button', {
-      type: 'button',
-      className: 'dsh-glaze-btn',
-      text: '跟随主题',
-      onClick: () => patchAndRefresh({ customAccent: '' }, true),
-    })
-
-    const tabPalette = el('div', { className: 'dsh-glaze-panel', hidden: activeTab !== 'palette' }, [
+    const tabMaster = el('div', { className: 'dsh-glaze-panel', hidden: activeTab !== 'master' }, [
       el('div', { className: 'dsh-glaze-section' }, [
-        el('h3', { text: '10 套瓷釉莫兰迪配色' }),
+        el('h3', { text: '东方意境全案（一键联动配色、侧栏、底纹、思考框与字体）' }),
+        masterGrid,
+      ]),
+      el('div', { className: 'dsh-glaze-section' }, [
+        el('h3', { text: '16 套瓷釉 & 传统色板' }),
         paletteGrid,
       ]),
       el('div', { className: 'dsh-glaze-section' }, [
-        el('h3', { text: '主强调色 & 发送按钮颜色（对应截图 ③）' }),
+        el('h3', { text: '侧边栏、右侧对话区底色与主强调色定制' }),
         makeRow(
-          '自定义主色',
-          el('div', { style: 'display:flex;gap:8px;flex:1;align-items:center;' }, [accentPicker, accentHex, accentReset]),
-          '同时控制发送按钮、高亮边框与选中态；留空自动使用当前配色的 WCAG AA 达标主色。'
+          '左侧边栏基调',
+          makeSelect(
+            cfg.sidebarTone,
+            [
+              ['layered', '分明书案（与右侧对话区呈温和色差分层）'],
+              ['deep', '沉檀深栏（紫禁/紫檀深色侧栏，衬托亮色画布）'],
+              ['seamless', '通透一体（与右侧对话区同色融通）'],
+              ['custom', '自定义侧栏底色'],
+            ],
+            (v) => patchAndRefresh({ sidebarTone: v, activeMasterPreset: '' }, true)
+          )
+        ),
+        cfg.sidebarTone === 'custom'
+          ? makeRow('侧边栏颜色', makeColorField(cfg.customSidebarBg, '#1f2937', 'customSidebarBg', '十六进制色值如 #1f2937'))
+          : null,
+        makeRow(
+          '右侧对话区底色',
+          makeColorField(cfg.customChatBg, '#141a1c', 'customChatBg', '留空跟随当前色板，或选专属背景色')
+        ),
+        makeRow(
+          '主强调 / 发送按钮色',
+          makeColorField(cfg.customAccent, '#4e8c97', 'customAccent', '留空跟随主题，控制发送键与焦点高亮')
         ),
       ]),
+    ])
+
+    // ── Tab 2: 深度组件造型 ────────────────────────────────────────────────
+    const tabComponents = el('div', { className: 'dsh-glaze-panel', hidden: activeTab !== 'components' }, [
       el('div', { className: 'dsh-glaze-section' }, [
-        el('h3', { text: '材质与能耗模式' }),
+        el('h3', { text: '右侧画布底纹与材质性能' }),
         makeRow(
-          '表面质感',
+          '画布静态底纹',
+          makeSelect(
+            cfg.canvasPattern,
+            [
+              ['ambience', '四隅流光（四角温和光晕）'],
+              ['xuan-paper', '宣纸素笺（细密纸纹 + 光晕）'],
+              ['landscape', '远山含黛（底部水墨层峦剪影）'],
+              ['lattice', '宋锦冰裂纹（古典几何窗格）'],
+              ['cloud', '祥云瑞霭（古典云纹线条）'],
+              ['none', '净素无纹（极简纯色底）'],
+            ],
+            (v) => patchAndRefresh({ canvasPattern: v, activeMasterPreset: '' }, false)
+          ),
+          '全部采用纯静态矢量/渐变纹理，0% 空载 CPU / 显卡动画消耗。'
+        ),
+        makeRow(
+          '表面质感模式',
           makeSelect(
             cfg.surfaceMode,
             [
               ['glaze', '瓷釉零模糊（推荐 · 0% 显卡占用）'],
               ['frosted', '轻雾静态毛玻璃（仅侧栏与输入卡）'],
             ],
-            (val) => patchAndRefresh({ surfaceMode: val }, false)
-          ),
-          '默认“瓷釉零模糊”通过通透色阶 + 顶部高光模拟质感，不跑高斯模糊也不跑循环动画。'
+            (v) => patchAndRefresh({ surfaceMode: v }, false)
+          )
+        ),
+      ]),
+      el('div', { className: 'dsh-glaze-section' }, [
+        el('h3', { text: '对话思考过程（已完成 / 深度求索中 / 折叠步骤块）' }),
+        makeRow(
+          '思考展示样式',
+          makeSelect(
+            cfg.thinkingStyle,
+            [
+              ['scroll-note', '墨卷朱批（「批」字印章条 + 柔底色卡片）'],
+              ['bamboo-slip', '竹简经折（「简」字徽标 + 双竖线简牍）'],
+              ['zen-line', '极简禅意（细竖线批注流）'],
+              ['native', '官方原生样式'],
+            ],
+            (v) => patchAndRefresh({ thinkingStyle: v, activeMasterPreset: '' }, false)
+          )
         ),
         makeRow(
-          '四角氛围光晕',
+          '思考正文字体',
           makeSelect(
-            String(cfg.ambienceEnabled),
+            String(cfg.thinkingKaiti),
             [
-              ['true', '开启（静态渐变，零 GPU 负载）'],
-              ['false', '关闭（极简纯色底）'],
+              ['false', '随正文默认字体'],
+              ['true', '楷体手批风（自动加载霞鹜文楷呈现思考细节）'],
             ],
-            (val) => patchAndRefresh({ ambienceEnabled: val === 'true' }, false)
+            (v) => patchAndRefresh({ thinkingKaiti: v === 'true', activeMasterPreset: '' }, false)
+          )
+        ),
+      ]),
+      el('div', { className: 'dsh-glaze-section' }, [
+        el('h3', { text: '输入框、发送键与用户气泡造型' }),
+        makeRow(
+          '输入框样式',
+          makeSelect(
+            cfg.composerStyle,
+            [
+              ['porcelain', '温润瓷砚（16px 圆角 + 三层柔影）'],
+              ['xuan-scroll', '文人花笺（四角中式直角框线）'],
+              ['imperial-seal', '文武双线（双层嵌套宫廷边框）'],
+              ['floating-jade', '悬浮流云（24px 大圆角空气感）'],
+            ],
+            (v) => patchAndRefresh({ composerStyle: v, activeMasterPreset: '' }, false)
+          )
+        ),
+        makeRow(
+          '发送按钮形状',
+          makeSelect(
+            cfg.sendButtonStyle,
+            [
+              ['round', '圆融明珠（默认圆形）'],
+              ['seal', '朱印方章（微圆角方印 + 内描边）'],
+              ['jade-pill', '温玉圆方（圆角矩形按钮）'],
+            ],
+            (v) => patchAndRefresh({ sendButtonStyle: v, activeMasterPreset: '' }, false)
+          )
+        ),
+        makeRow(
+          '用户消息气泡',
+          makeSelect(
+            cfg.bubbleStyle,
+            [
+              ['glaze', '瓷片柔影（主题微染色圆角气泡）'],
+              ['letter-paper', '素笺右栏（右端主题竖条书信感）'],
+              ['ink-outline', '水墨细框（透明底 + 细线描边）'],
+            ],
+            (v) => patchAndRefresh({ bubbleStyle: v, activeMasterPreset: '' }, false)
           )
         ),
       ]),
     ])
 
-    // Tab 2: 艺术字体
+    // ── Tab 3: 艺术字体 ────────────────────────────────────────────────
     const fontGrid = el('div', { className: 'dsh-glaze-font-grid' })
     for (const preset of Object.values(DISPLAY_FONTS)) {
       const href = resolveFontUrl(preset, cfg.fontCdn)
@@ -378,7 +564,7 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
             type: 'button',
             className: 'dsh-glaze-font-card',
             dataset: { active: String(cfg.displayFont === preset.id) },
-            onClick: () => patchAndRefresh({ displayFont: preset.id }, true),
+            onClick: () => patchAndRefresh({ displayFont: preset.id, activeMasterPreset: '' }, true),
           },
           [
             el('div', { className: 'dsh-glaze-font-card__top' }, [
@@ -395,45 +581,44 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
       )
     }
 
-    const sizeValueSpan = el('span', { text: `${cfg.headlineSizePx}px`, style: 'min-width:42px;text-align:right;font-size:12.5px;' })
-    const sizeRange = el('input', {
-      type: 'range',
-      min: 20,
-      max: 42,
-      value: cfg.headlineSizePx,
-      style: 'flex:1;',
-      onInput: (e) => {
-        const val = Number(e.target.value)
-        sizeValueSpan.textContent = `${val}px`
-        patchAndRefresh({ headlineSizePx: val }, false)
-      },
-    })
-
     const tabFonts = el('div', { className: 'dsh-glaze-panel', hidden: activeTab !== 'fonts' }, [
       el('div', { className: 'dsh-glaze-section' }, [
-        el('h3', { text: '标题与欢迎语艺术字体（作用于左上角软件名 & 首页主标语）' }),
+        el('h3', { text: '艺术字体库（同时作用于左上角软件名 & 首页主标语）' }),
         fontGrid,
         cfg.displayFont === 'custom'
           ? el('div', { style: 'margin-top:10px;' }, [
-              makeRow('自定义字体名', makeTextInput(cfg.customDisplayFont, '如 "LXGW WenKai", "PingFang SC"', (v) => patchAndRefresh({ customDisplayFont: v }, false))),
+              makeRow('自定义艺术字体', makeTextInput(cfg.customDisplayFont, '如 "LXGW WenKai", "PingFang SC"', (v) => patchAndRefresh({ customDisplayFont: v }, false))),
             ])
           : null,
       ]),
       el('div', { className: 'dsh-glaze-section' }, [
-        el('h3', { text: '字体特效与全局字体' }),
+        el('h3', { text: '字号与艺术字效调节' }),
+        makeSliderRow('左上角软件名字号', cfg.brandFontSizePx, 12, 28, 'brandFontSizePx', '需先在「品牌与欢迎页」填写自定义软件名称后生效。'),
         makeRow(
-          '欢迎语艺术样式',
+          '软件名艺术效果',
+          makeSelect(
+            cfg.brandStyle,
+            [
+              ['solid', '墨韵纯色'],
+              ['gradient', '琉璃双色渐变'],
+              ['glow', '微光冷晕'],
+            ],
+            (v) => patchAndRefresh({ brandStyle: v }, false)
+          )
+        ),
+        makeSliderRow('首页欢迎语字号', cfg.headlineSizePx, 20, 42, 'headlineSizePx'),
+        makeRow(
+          '欢迎语艺术效果',
           makeSelect(
             cfg.headlineStyle,
             [
-              ['solid', '墨韵纯色（清晰锐利）'],
-              ['gradient', '琉璃渐变（双色文字渐变）'],
-              ['glow', '微光冷晕（静态淡影）'],
+              ['solid', '墨韵纯色'],
+              ['gradient', '琉璃双色渐变'],
+              ['glow', '微光冷晕'],
             ],
-            (v) => patchAndRefresh({ headlineStyle: v }, false)
+            (v) => patchAndRefresh({ headlineStyle: v, activeMasterPreset: '' }, false)
           )
         ),
-        makeRow('欢迎语字号', el('div', { style: 'display:flex;align-items:center;gap:10px;flex:1;' }, [sizeRange, sizeValueSpan])),
         makeRow(
           '全局正文字体',
           makeSelect(
@@ -459,11 +644,12 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
       ]),
     ])
 
-    // Tab 3: 品牌与欢迎页（截图 ① & ②）
+    // ── Tab 4: 品牌与欢迎页 ────────────────────────────────────────────────
     const tabBrand = el('div', { className: 'dsh-glaze-panel', hidden: activeTab !== 'brand' }, [
       el('div', { className: 'dsh-glaze-section' }, [
         el('h3', { text: '① 左上角品牌栏（Sidebar Brand）' }),
         makeRow('软件主名称', makeTextInput(cfg.brandName, '如：砚台 Studio（留空恢复官方图标）', (v) => patchAndRefresh({ brandName: v }, false))),
+        makeSliderRow('软件名字号', cfg.brandFontSizePx, 12, 28, 'brandFontSizePx'),
         makeRow(
           '右侧角标模式',
           makeSelect(
@@ -475,7 +661,7 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
             ],
             (v) => patchAndRefresh({ brandBadgeMode: v }, true)
           ),
-          '设置自定义“软件主名称”后，自定义角标与隐藏角标会立即生效。'
+          '填写自定义“软件主名称”后，自定义角标与字号会立即生效。'
         ),
         cfg.brandBadgeMode === 'custom'
           ? makeRow('角标文字', makeTextInput(cfg.brandBadgeText, '如 STUDIO / PRO / AI', (v) => patchAndRefresh({ brandBadgeText: v }, false)))
@@ -569,7 +755,7 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
       ]),
     ])
 
-    // Tab 4: 个人栏与备份（截图 ④）
+    // ── Tab 5: 个人栏与备份 ────────────────────────────────────────────────
     const importFile = el('input', { type: 'file', accept: 'application/json,.json', hidden: true })
     importFile.addEventListener('change', async () => {
       const f = importFile.files?.[0]
@@ -653,29 +839,34 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
       ]),
     ])
 
-    const tabsBar = el('div', { className: 'dsh-glaze-tabs', role: 'tablist' }, [
-      ['palette', '配色与质感'],
-      ['fonts', '艺术字体'],
-      ['brand', '品牌与欢迎页'],
-      ['account', '个人栏与备份'],
-    ].map(([id, label]) =>
-      el('button', {
-        type: 'button',
-        role: 'tab',
-        className: 'dsh-glaze-tab',
-        text: label,
-        dataset: { active: String(activeTab === id) },
-        onClick: () => {
-          activeTab = id
-          renderModal()
-        },
-      })
-    ))
+    const tabsBar = el(
+      'div',
+      { className: 'dsh-glaze-tabs', role: 'tablist' },
+      [
+        ['master', '意境与色板'],
+        ['components', '深度组件造型'],
+        ['fonts', '艺术字体'],
+        ['brand', '品牌与欢迎页'],
+        ['account', '个人栏与备份'],
+      ].map(([id, label]) =>
+        el('button', {
+          type: 'button',
+          role: 'tab',
+          className: 'dsh-glaze-tab',
+          text: label,
+          dataset: { active: String(activeTab === id) },
+          onClick: () => {
+            activeTab = id
+            renderModal()
+          },
+        })
+      )
+    )
 
     const modal = el('div', { className: 'dsh-glaze-modal', onClick: (e) => e.stopPropagation() }, [
       el('div', { className: 'dsh-glaze-modal__head' }, [
         el('div', { className: 'dsh-glaze-modal__title' }, [
-          el('h2', { text: '瓷釉 Glaze · 主题与品牌定制' }),
+          el('h2', { text: '瓷釉 Glaze · 深度 UI 与东方美学定制' }),
           el('span', { text: '实时生效 · 零常驻动画 · 0% 空载显卡消耗' }),
         ]),
         el('button', {
@@ -687,7 +878,7 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
         }),
       ]),
       tabsBar,
-      el('div', { className: 'dsh-glaze-modal__body' }, [tabPalette, tabFonts, tabBrand, tabAccount]),
+      el('div', { className: 'dsh-glaze-modal__body' }, [tabMaster, tabComponents, tabFonts, tabBrand, tabAccount]),
       el('div', { className: 'dsh-glaze-modal__foot' }, [
         statusLine,
         el('button', { type: 'button', className: 'dsh-glaze-btn dsh-glaze-btn--primary', text: '完成', onClick: closeModal }),
@@ -716,6 +907,7 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
 
   return {
     ensureSwitcherMounted,
+    needsHostSync,
     syncSwitcherVisuals,
     openModal,
     closeModal,

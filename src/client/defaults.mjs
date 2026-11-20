@@ -1,25 +1,46 @@
-import { VARIANTS, VARIANT_LABELS } from './palette.mjs'
-import { DISPLAY_FONTS, BODY_FONTS, FONT_CDNS } from './fonts.mjs'
+import { MASTER_PRESETS, VARIANTS, VARIANT_LABELS } from './palette.mjs'
+import { BODY_FONTS, DISPLAY_FONTS, FONT_CDNS } from './fonts.mjs'
 
 export const PLUGIN_ID = 'dsh-glaze-theme'
 export const STORAGE_KEY = 'dsh-glaze-theme-config-v1'
 export const CONFIG_ENDPOINT = '/__glaze/config'
 
-export const DEFAULT_CONFIG = {
-  version: 1,
-  variant: 'ripple',
-  surfaceMode: 'glaze', // 'glaze' (zero-blur low GPU) | 'frosted' (static pseudo-element blur)
-  ambienceEnabled: true,
-  customAccent: '', // '#rrggbb' or ''
+export const SIDEBAR_TONES = ['layered', 'deep', 'seamless', 'custom']
+export const CANVAS_PATTERNS = ['ambience', 'xuan-paper', 'landscape', 'lattice', 'cloud', 'none']
+export const THINKING_STYLES = ['scroll-note', 'bamboo-slip', 'zen-line', 'native']
+export const COMPOSER_STYLES = ['porcelain', 'xuan-scroll', 'imperial-seal', 'floating-jade']
+export const SEND_BUTTON_STYLES = ['round', 'seal', 'jade-pill']
+export const BUBBLE_STYLES = ['glaze', 'letter-paper', 'ink-outline']
 
-  // Artistic & global fonts
-  fontCdn: 'loli', // 'loli' | 'google'
-  displayFont: 'default', // key in DISPLAY_FONTS
+export const DEFAULT_CONFIG = {
+  version: 2,
+  variant: 'ripple',
+  activeMasterPreset: '',
+  surfaceMode: 'glaze', // 'glaze' | 'frosted'
+  ambienceEnabled: true,
+  customAccent: '',
+
+  // Deep UI Architecture & Chinese Aesthetics
+  sidebarTone: 'layered', // 'layered' | 'deep' | 'seamless' | 'custom'
+  customSidebarBg: '',
+  customChatBg: '',
+  canvasPattern: 'ambience', // 'ambience' | 'xuan-paper' | 'landscape' | 'lattice' | 'cloud' | 'none'
+  thinkingStyle: 'scroll-note', // 'scroll-note' | 'bamboo-slip' | 'zen-line' | 'native'
+  thinkingKaiti: false,
+  composerStyle: 'porcelain', // 'porcelain' | 'xuan-scroll' | 'imperial-seal' | 'floating-jade'
+  sendButtonStyle: 'round', // 'round' | 'seal' | 'jade-pill'
+  bubbleStyle: 'glaze', // 'glaze' | 'letter-paper' | 'ink-outline'
+
+  // Artistic & Global Fonts
+  fontCdn: 'loli',
+  displayFont: 'default',
   customDisplayFont: '',
-  bodyFont: 'default', // key in BODY_FONTS
+  bodyFont: 'default',
   customBodyFont: '',
   headlineStyle: 'solid', // 'solid' | 'gradient' | 'glow'
   headlineSizePx: 28,
+  brandStyle: 'solid', // 'solid' | 'gradient' | 'glow'
+  brandFontSizePx: 17,
 
   // Area 1: Top-left sidebar brand + browser title
   brandName: '',
@@ -50,10 +71,17 @@ export const DEFAULT_CONFIG = {
 
 const HEX_COLOR_RE = /^#[0-9a-fA-F]{6}$/
 const SAFE_IMAGE_RE = /^(data:image\/(png|jpeg|webp|gif|svg\+xml);base64,|https?:\/\/)/i
+const MASTER_IDS = MASTER_PRESETS.map((p) => p.id)
 
 function cleanStr(value, maxLen = 160) {
   if (typeof value !== 'string') return ''
   return value.replace(/[\r\n\0]/g, ' ').trim().slice(0, maxLen)
+}
+
+function cleanHex(value) {
+  if (typeof value !== 'string') return ''
+  const trimmed = value.trim()
+  return HEX_COLOR_RE.test(trimmed) ? trimmed.toLowerCase() : ''
 }
 
 function cleanImage(value) {
@@ -70,14 +98,33 @@ function pickEnum(value, allowed, fallback) {
 export function sanitizeConfig(raw) {
   const src = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {}
   const headlineSize = Number(src.headlineSizePx)
+  const brandSize = Number(src.brandFontSizePx)
+  const ambienceEnabled = typeof src.ambienceEnabled === 'boolean'
+    ? src.ambienceEnabled
+    : DEFAULT_CONFIG.ambienceEnabled
+
+  let canvasPattern = pickEnum(src.canvasPattern, CANVAS_PATTERNS, '')
+  if (!canvasPattern) {
+    canvasPattern = ambienceEnabled ? DEFAULT_CONFIG.canvasPattern : 'none'
+  }
+
   return {
-    version: 1,
+    version: 2,
     variant: pickEnum(src.variant, VARIANTS, DEFAULT_CONFIG.variant),
+    activeMasterPreset: MASTER_IDS.includes(src.activeMasterPreset) ? src.activeMasterPreset : '',
     surfaceMode: pickEnum(src.surfaceMode, ['glaze', 'frosted'], DEFAULT_CONFIG.surfaceMode),
-    ambienceEnabled: typeof src.ambienceEnabled === 'boolean' ? src.ambienceEnabled : DEFAULT_CONFIG.ambienceEnabled,
-    customAccent: typeof src.customAccent === 'string' && HEX_COLOR_RE.test(src.customAccent.trim())
-      ? src.customAccent.trim().toLowerCase()
-      : '',
+    ambienceEnabled: canvasPattern !== 'none',
+    customAccent: cleanHex(src.customAccent),
+
+    sidebarTone: pickEnum(src.sidebarTone, SIDEBAR_TONES, DEFAULT_CONFIG.sidebarTone),
+    customSidebarBg: cleanHex(src.customSidebarBg),
+    customChatBg: cleanHex(src.customChatBg),
+    canvasPattern,
+    thinkingStyle: pickEnum(src.thinkingStyle, THINKING_STYLES, DEFAULT_CONFIG.thinkingStyle),
+    thinkingKaiti: typeof src.thinkingKaiti === 'boolean' ? src.thinkingKaiti : DEFAULT_CONFIG.thinkingKaiti,
+    composerStyle: pickEnum(src.composerStyle, COMPOSER_STYLES, DEFAULT_CONFIG.composerStyle),
+    sendButtonStyle: pickEnum(src.sendButtonStyle, SEND_BUTTON_STYLES, DEFAULT_CONFIG.sendButtonStyle),
+    bubbleStyle: pickEnum(src.bubbleStyle, BUBBLE_STYLES, DEFAULT_CONFIG.bubbleStyle),
 
     fontCdn: pickEnum(src.fontCdn, Object.keys(FONT_CDNS), DEFAULT_CONFIG.fontCdn),
     displayFont: pickEnum(src.displayFont, Object.keys(DISPLAY_FONTS), DEFAULT_CONFIG.displayFont),
@@ -88,6 +135,10 @@ export function sanitizeConfig(raw) {
     headlineSizePx: Number.isFinite(headlineSize)
       ? Math.max(20, Math.min(42, Math.round(headlineSize)))
       : DEFAULT_CONFIG.headlineSizePx,
+    brandStyle: pickEnum(src.brandStyle, ['solid', 'gradient', 'glow'], DEFAULT_CONFIG.brandStyle),
+    brandFontSizePx: Number.isFinite(brandSize)
+      ? Math.max(12, Math.min(28, Math.round(brandSize)))
+      : DEFAULT_CONFIG.brandFontSizePx,
 
     brandName: cleanStr(src.brandName, 40),
     brandBadgeMode: pickEnum(src.brandBadgeMode, ['default', 'custom', 'hidden'], DEFAULT_CONFIG.brandBadgeMode),
