@@ -92,6 +92,9 @@ export function applyConfigToDOM(config) {
   body.dataset.glazeSidebarTone = config.sidebarTone
   body.dataset.glazeThinking = config.thinkingStyle
   body.dataset.glazeComposer = config.composerStyle
+  const opacityPct = Math.max(0, Math.min(100, Number(config.composerOpacityPct ?? 92)))
+  body.style.setProperty('--glaze-composer-trans', `${100 - opacityPct}%`)
+  body.style.setProperty('--glaze-composer-seat-alpha', String(Number((opacityPct / 100).toFixed(2))))
   body.dataset.glazeSendBtn = config.sendButtonStyle
   body.dataset.glazeBubble = config.bubbleStyle
   body.dataset.glazeHeadlineStyle = config.headlineStyle

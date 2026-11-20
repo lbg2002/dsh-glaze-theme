@@ -148,6 +148,7 @@ body[data-glaze-variant]:not([data-glaze-pattern="none"]) [data-content-phase="a
   inset: 0;
   z-index: -1;
   pointer-events: none;
+  opacity: var(--glaze-composer-seat-alpha, 0.92);
   background-color: var(--dsw-alias-bg-layer-1, #101010);
   background-image: var(--glaze-canvas-image, var(--glaze-ambience));
   background-repeat: var(--glaze-canvas-repeat, no-repeat);
@@ -164,6 +165,7 @@ body[data-glaze-variant][data-glaze-pattern="none"] [data-content-phase="active"
   inset: 0;
   z-index: -1;
   pointer-events: none;
+  opacity: var(--glaze-composer-seat-alpha, 0.92);
   background-color: var(--dsw-alias-bg-layer-1, #101010);
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 56px);
   mask-image: linear-gradient(to bottom, transparent 0, #000 56px);
@@ -398,11 +400,13 @@ body[data-glaze-variant] [data-composer-input]:focus-visible {
   outline: none !important;
 }
 
-body[data-glaze-variant] div[class*="_composer"] div[class*="_card"] {
+body[data-glaze-variant] div[class*="_composer"] div[class*="_card"],
+body[data-glaze-variant] [data-composer-card] {
+  --glaze-composer-fill: color-mix(in oklch, white 68%, var(--glaze-bg));
   position: relative;
   border: 1px solid color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 62%);
   border-radius: 16px;
-  background-color: color-mix(in oklch, white 68%, var(--glaze-bg));
+  background-color: color-mix(in oklch, var(--glaze-composer-fill), transparent var(--glaze-composer-trans, 8%)) !important;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.72),
     0 2px 6px -1px color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 88%),
@@ -412,19 +416,23 @@ body[data-glaze-variant] div[class*="_composer"] div[class*="_card"] {
     border-color var(--glaze-dur) var(--glaze-ease),
     box-shadow var(--glaze-dur) var(--glaze-ease);
 }
-body[data-ds-dark-theme][data-glaze-variant] div[class*="_composer"] div[class*="_card"] {
+body[data-ds-dark-theme][data-glaze-variant] div[class*="_composer"] div[class*="_card"],
+body[data-ds-dark-theme][data-glaze-variant] [data-composer-card] {
+  --glaze-composer-fill: color-mix(in oklch, var(--dsw-alias-bg-layer-1, #101010), var(--dsw-alias-bg-layer-2, #181818) 65%);
   border-color: var(--glaze-hairline);
-  background-color: color-mix(in oklch, var(--dsw-alias-bg-layer-1, #101010), var(--dsw-alias-bg-layer-2, #181818) 65%);
+  background-color: color-mix(in oklch, var(--glaze-composer-fill), transparent var(--glaze-composer-trans, 8%)) !important;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.11),
     0 1px 2px -1px rgba(0, 0, 0, 0.45),
     0 18px 48px -20px rgba(0, 0, 0, 0.50),
     0 0 48px -18px color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 72%);
 }
-body[data-glaze-variant] div[class*="_composer"] div[class*="_card"]:hover {
+body[data-glaze-variant] div[class*="_composer"] div[class*="_card"]:hover,
+body[data-glaze-variant] [data-composer-card]:hover {
   border-color: var(--glaze-hairline-strong);
 }
-body[data-glaze-variant] div[class*="_composer"] div[class*="_card"]:focus-within {
+body[data-glaze-variant] div[class*="_composer"] div[class*="_card"]:focus-within,
+body[data-glaze-variant] [data-composer-card]:focus-within {
   border-color: color-mix(in oklch, var(--glaze-accent), transparent 36%);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.45),
@@ -437,7 +445,8 @@ body[data-glaze-variant] div[class*="_composer"] div[class*="_card"]:focus-withi
 body:not([data-ds-dark-theme])[data-glaze-variant] {
   --glaze-bracket-color: color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 36%);
 }
-body[data-glaze-variant][data-glaze-composer="xuan-scroll"] div[class*="_composer"] div[class*="_card"] {
+body[data-glaze-variant][data-glaze-composer="xuan-scroll"] div[class*="_composer"] div[class*="_card"],
+body[data-glaze-variant][data-glaze-composer="xuan-scroll"] [data-composer-card] {
   border-radius: 10px;
   background-image:
     linear-gradient(var(--glaze-bracket-color), var(--glaze-bracket-color)),
@@ -462,17 +471,19 @@ body[data-glaze-variant][data-glaze-composer="xuan-scroll"] div[class*="_compose
 }
 
 /* Composer variant: imperial-seal (文武双线框) */
-body[data-glaze-variant][data-glaze-composer="imperial-seal"] div[class*="_composer"] div[class*="_card"] {
+body[data-glaze-variant][data-glaze-composer="imperial-seal"] div[class*="_composer"] div[class*="_card"],
+body[data-glaze-variant][data-glaze-composer="imperial-seal"] [data-composer-card] {
   border-radius: 8px;
   border: 1.5px solid var(--glaze-hairline-strong);
   box-shadow:
-    inset 0 0 0 3px var(--dsw-alias-bg-layer-1),
+    inset 0 0 0 3px color-mix(in oklch, var(--dsw-alias-bg-layer-1), transparent var(--glaze-composer-trans, 8%)),
     inset 0 0 0 4px var(--glaze-hairline),
     0 18px 46px -20px color-mix(in oklch, var(--glaze-accent, #4e8c97), transparent 58%);
 }
 
 /* Composer variant: floating-jade (悬浮流云) */
-body[data-glaze-variant][data-glaze-composer="floating-jade"] div[class*="_composer"] div[class*="_card"] {
+body[data-glaze-variant][data-glaze-composer="floating-jade"] div[class*="_composer"] div[class*="_card"],
+body[data-glaze-variant][data-glaze-composer="floating-jade"] [data-composer-card] {
   border-radius: 24px;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.28),
@@ -480,22 +491,24 @@ body[data-glaze-variant][data-glaze-composer="floating-jade"] div[class*="_compo
     0 0 48px -16px color-mix(in oklch, var(--glaze-motion-2, var(--glaze-accent, #4e8c97)), transparent 62%);
 }
 
-body[data-glaze-variant][data-glaze-surface="frosted"] div[class*="_composer"] div[class*="_card"] {
-  background-color: transparent;
+body[data-glaze-variant][data-glaze-surface="frosted"] div[class*="_composer"] div[class*="_card"],
+body[data-glaze-variant][data-glaze-surface="frosted"] [data-composer-card] {
+  background-color: transparent !important;
 }
-body[data-glaze-variant][data-glaze-surface="frosted"] div[class*="_composer"] div[class*="_card"]::before {
+body[data-glaze-variant][data-glaze-surface="frosted"] div[class*="_composer"] div[class*="_card"]::before,
+body[data-glaze-variant][data-glaze-surface="frosted"] [data-composer-card]::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: -1;
   pointer-events: none;
   border-radius: inherit;
-  background-color: color-mix(in oklch, var(--dsw-alias-bg-layer-1, #fff), transparent 72%);
+  background-color: color-mix(in oklch, var(--glaze-composer-fill), transparent var(--glaze-composer-trans, 28%));
   backdrop-filter: blur(16px) saturate(1.25);
   -webkit-backdrop-filter: blur(16px) saturate(1.25);
 }
-body[data-ds-dark-theme][data-glaze-variant][data-glaze-surface="frosted"] div[class*="_composer"] div[class*="_card"]::before {
-  background-color: color-mix(in oklch, var(--dsw-alias-bg-layer-1, #101010), transparent 58%);
+body[data-glaze-variant] [data-composer-card] button[class*="_add"] {
+  background: color-mix(in oklch, var(--dsw-specific-selector), transparent calc(var(--glaze-composer-trans, 8%) * 0.6));
 }
 
 /* Send Button Styles */
@@ -1170,7 +1183,10 @@ export function buildUiCSS() {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: rgba(8, 12, 18, 0.56);
+  background: rgba(8, 12, 18, 0.36);
+}
+body[data-ds-dark-theme] .dsh-glaze-modal-backdrop {
+  background: rgba(8, 12, 18, 0.54);
 }
 .dsh-glaze-modal-backdrop[hidden] { display: none; }
 .dsh-glaze-modal {

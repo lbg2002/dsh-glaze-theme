@@ -1,6 +1,6 @@
 {
   "name": "dsh-glaze-theme",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "瓷釉 Glaze for DeepSeek Harness — 16套东方意境莫兰迪配色、艺术字体、思考/输入框/气泡深度 UI 定制与零模糊低消耗主题插件",
   "type": "module",
   "main": "./lib/index.js",

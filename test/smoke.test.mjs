@@ -85,6 +85,7 @@ test('CSS & bundle contain zero infinite animations, true panoramic seamless rul
     .filter((line) => /backdrop-filter/i.test(line))
   assert.ok(nonFrostedLines.length > 0, 'Frosted opt-in styles should exist')
   assert.ok(coreCss.includes('[data-glaze-surface="frosted"]'), 'backdrop-filter must be gated on frosted opt-in')
+  assert.ok(coreCss.includes('--glaze-composer-trans'), 'Core CSS must support configurable composer opacity')
 
   const clientBundle = readFileSync(path.join(root, 'lib', 'client.js'), 'utf8')
   assert.equal(/\bsetInterval\b/.test(clientBundle), false, 'Client bundle must not poll with setInterval')
@@ -92,6 +93,7 @@ test('CSS & bundle contain zero infinite animations, true panoramic seamless rul
   assert.ok(clientBundle.includes('id: PLUGIN_ID') || clientBundle.includes('id: "dsh-glaze-theme"'), 'Bundle must declare plugin id')
   assert.ok(clientBundle.includes('exports.apply'), 'Bundle must export apply()')
   assert.ok(clientBundle.includes('[data-conversation-header-corner]'), 'Bundle must support header corner mounting to avoid overlap')
+  assert.ok(clientBundle.includes('--glaze-composer-trans'), 'Client bundle must include composer opacity CSS token')
 })
 
 test('sanitizeConfig & greeting resolvers handle deep UI fields, clamping & presets safely', () => {
@@ -102,6 +104,7 @@ test('sanitizeConfig & greeting resolvers handle deep UI fields, clamping & pres
     canvasPattern: 'bogus',
     thinkingStyle: 'bogus',
     composerStyle: 'bogus',
+    composerOpacityPct: 180,
     sendButtonStyle: 'bogus',
     bubbleStyle: 'bogus',
     customAccent: 'not-a-color',
@@ -120,6 +123,9 @@ test('sanitizeConfig & greeting resolvers handle deep UI fields, clamping & pres
   assert.equal(dirty.canvasPattern, 'ambience')
   assert.equal(dirty.thinkingStyle, 'scroll-note')
   assert.equal(dirty.composerStyle, 'porcelain')
+  assert.equal(dirty.composerOpacityPct, 100)
+  assert.equal(sanitizeConfig({ composerOpacityPct: -20 }).composerOpacityPct, 0)
+  assert.equal(sanitizeConfig({}).composerOpacityPct, 92)
   assert.equal(dirty.sendButtonStyle, 'round')
   assert.equal(dirty.bubbleStyle, 'glaze')
   assert.equal(dirty.customAccent, '')

@@ -316,9 +316,9 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
       return el('div', { style: 'display:flex;gap:8px;flex:1;align-items:center;' }, [picker, hexInp, resetBtn])
     }
 
-    const makeSliderRow = (labelText, value, min, max, key, hintText) => {
+    const makeSliderRow = (labelText, value, min, max, key, hintText, unit = 'px') => {
       const readout = el('span', {
-        text: `${value}px`,
+        text: `${value}${unit}`,
         style: 'min-width:44px;text-align:right;font-size:12.5px;',
       })
       const range = el('input', {
@@ -329,7 +329,7 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
         style: 'flex:1;',
         onInput: (e) => {
           const num = Number(e.target.value)
-          readout.textContent = `${num}px`
+          readout.textContent = `${num}${unit}`
           patchAndRefresh({ [key]: num }, false)
         },
       })
@@ -515,6 +515,15 @@ export function createUIController({ getConfig, updateConfig, resetConfig, onSta
             ],
             (v) => patchAndRefresh({ composerStyle: v, activeMasterPreset: '' }, false)
           )
+        ),
+        makeSliderRow(
+          '输入框不透明度',
+          cfg.composerOpacityPct,
+          0,
+          100,
+          'composerOpacityPct',
+          '0% 为全透明悬浮线框，100% 为纯实心瓷片；拖动滑块可实时观察下方输入框透底效果。',
+          '%'
         ),
         makeRow(
           '发送按钮形状',

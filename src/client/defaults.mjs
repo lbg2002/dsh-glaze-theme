@@ -28,6 +28,7 @@ export const DEFAULT_CONFIG = {
   thinkingStyle: 'scroll-note', // 'scroll-note' | 'bamboo-slip' | 'zen-line' | 'native'
   thinkingKaiti: false,
   composerStyle: 'porcelain', // 'porcelain' | 'xuan-scroll' | 'imperial-seal' | 'floating-jade'
+  composerOpacityPct: 92,
   sendButtonStyle: 'round', // 'round' | 'seal' | 'jade-pill'
   bubbleStyle: 'glaze', // 'glaze' | 'letter-paper' | 'ink-outline'
 
@@ -99,6 +100,7 @@ export function sanitizeConfig(raw) {
   const src = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {}
   const headlineSize = Number(src.headlineSizePx)
   const brandSize = Number(src.brandFontSizePx)
+  const composerOpacity = Number(src.composerOpacityPct)
   const ambienceEnabled = typeof src.ambienceEnabled === 'boolean'
     ? src.ambienceEnabled
     : DEFAULT_CONFIG.ambienceEnabled
@@ -123,6 +125,9 @@ export function sanitizeConfig(raw) {
     thinkingStyle: pickEnum(src.thinkingStyle, THINKING_STYLES, DEFAULT_CONFIG.thinkingStyle),
     thinkingKaiti: typeof src.thinkingKaiti === 'boolean' ? src.thinkingKaiti : DEFAULT_CONFIG.thinkingKaiti,
     composerStyle: pickEnum(src.composerStyle, COMPOSER_STYLES, DEFAULT_CONFIG.composerStyle),
+    composerOpacityPct: Number.isFinite(composerOpacity)
+      ? Math.max(0, Math.min(100, Math.round(composerOpacity)))
+      : DEFAULT_CONFIG.composerOpacityPct,
     sendButtonStyle: pickEnum(src.sendButtonStyle, SEND_BUTTON_STYLES, DEFAULT_CONFIG.sendButtonStyle),
     bubbleStyle: pickEnum(src.bubbleStyle, BUBBLE_STYLES, DEFAULT_CONFIG.bubbleStyle),
 

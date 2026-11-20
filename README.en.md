@@ -13,7 +13,7 @@ A Chinese aesthetic, deep-UI-customizable, **zero-idle-GPU/CPU** theme plugin fo
 * **Deep Component Customization**:
   * **Panoramic Left Sidebar & Canvas**: Layered / Deep Lacquer / True Seamless (boundary-free full-window canvas) / Custom hex sidebar tones, custom chat background color, and static SVG textures (*Gold-Flecked Xuan Paper*, *Polychrome Ink Mountains*, *Song Lattice*, *Dual-Tone Clouds*).
   * **Thinking / Reasoning Blocks**: *Scroll Note*, *Bamboo Slip*, *Zen Line*, or *Native*, with optional calligraphic WenKai script for thinking details.
-  * **Composer, Send Button & Bubbles**: *Porcelain*, *Xuan Scroll Brackets*, *Imperial Double-Border*, or *Floating Jade* composer cards; *Round*, *Seal Stamp*, or *Jade Pill* send buttons; *Glaze*, *Letter Paper*, or *Ink Outline* user bubbles.
+  * **Composer, Send Button & Bubbles**: *Porcelain*, *Xuan Scroll Brackets*, *Imperial Double-Border*, or *Floating Jade* composer cards with **0%–100% composer background opacity control**; *Round*, *Seal Stamp*, or *Jade Pill* send buttons; *Glaze*, *Letter Paper*, or *Ink Outline* user bubbles.
 * **Artistic Fonts & Brand Customizer**: Independently resize top-left brand name (`12–28px`) and hero headline (`20–42px`), choose on-demand artistic/calligraphic fonts, customize brand logo/badge, hero greetings (static, time-of-day, or palette poetry), placeholder, and bottom-left nickname/avatar with JSON export/import & `~/.dsh/glaze-theme.json` persistence.
 
 ## Installation
