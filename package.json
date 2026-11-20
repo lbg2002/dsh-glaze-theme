@@ -42,14 +42,28 @@
   ],
   "license": "MIT",
   "files": [
+    "assets/icon-180.png",
+    "assets/preview-qianli-light.png",
+    "assets/preview-ruyao-dark.png",
+    "assets/preview-customizer.png",
     "cordis.patch.yml",
     "lib/",
     "src/",
     "scripts/install-local.mjs",
+    "screenshots.json",
     "README.md",
     "README.en.md",
     "LICENSE"
   ],
+  "author": "lbg2002",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lbg2002/dsh-glaze-theme.git"
+  },
+  "homepage": "https://github.com/lbg2002/dsh-glaze-theme#readme",
+  "bugs": {
+    "url": "https://github.com/lbg2002/dsh-glaze-theme/issues"
+  },
   "engines": {
     "node": ">=22.0.0"
   }

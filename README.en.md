@@ -1,8 +1,23 @@
+<p align="center">
+  <img src="assets/icon-180.png" width="96" alt="dsh-glaze-theme icon">
+</p>
+
 # Glaze · `dsh-glaze-theme`
 
 English | [中文](README.md)
 
-A Chinese aesthetic, deep-UI-customizable, **zero-idle-GPU/CPU** theme plugin for **DeepSeek Harness (`dsh`)** featuring 16 WCAG AA OKLCH palettes and 6 one-click Chinese Master Presets.
+[![GitHub release](https://img.shields.io/github/v/release/lbg2002/dsh-glaze-theme)](https://github.com/lbg2002/dsh-glaze-theme/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+A Chinese aesthetic, deep-UI-customizable, **zero-idle-GPU/CPU** theme plugin for **DeepSeek Harness (`dsh`)** featuring 16 WCAG AA OKLCH palettes, 6 Chinese Master Presets, 0–100% composer opacity, and boundary-free panoramic seamless sidebars.
+
+---
+
+## Previews
+
+| Qianli Landscape (Light Seamless) | Song Ruyao (Dark Lattice) | 5-Tab Deep Customizer |
+| :---: | :---: | :---: |
+| ![Qianli Light](assets/preview-qianli-light.png) | ![Ruyao Dark](assets/preview-ruyao-dark.png) | ![Customizer Modal](assets/preview-customizer.png) |
 
 ---
 
@@ -18,11 +33,22 @@ A Chinese aesthetic, deep-UI-customizable, **zero-idle-GPU/CPU** theme plugin fo
 
 ## Installation
 
+### Prebuilt Release Tarball (Recommended)
+
 ```bash
-dsh plugin --profile web add <path-or-github-repo>
+dsh plugin --profile web add https://github.com/lbg2002/dsh-glaze-theme/releases/download/v0.3.1/dsh-glaze-theme-0.3.1.tgz
 ```
 
-Ensure `"dsh-glaze-theme"` is in `dsh.profile.bundles` inside `~/.dsh/profiles/web/package.json` (or run `node scripts/install-local.mjs web`), then restart DeepSeek Harness.
+### Plugin Market or GitHub Source
+
+* Search `dsh-glaze-theme` inside **Plugins → Market (Themes tab)** once indexed via `awesome-dsh-plugin`.
+* Or install from GitHub source:
+
+```bash
+dsh plugin --profile web add github:lbg2002/dsh-glaze-theme
+```
+
+Ensure `"dsh-glaze-theme"` is in `dsh.profile.bundles` inside `~/.dsh/profiles/web/package.json` (or run `node scripts/install-local.mjs web` for local development), then restart DeepSeek Harness.
 
 ## Build & Test
 

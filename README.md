@@ -1,10 +1,25 @@
+<p align="center">
+  <img src="assets/icon-180.png" width="96" alt="瓷釉 dsh-glaze-theme 图标">
+</p>
+
 # 瓷釉 · `dsh-glaze-theme`
 
 [English](README.en.md) | 中文
 
+[![GitHub release](https://img.shields.io/github/v/release/lbg2002/dsh-glaze-theme)](https://github.com/lbg2002/dsh-glaze-theme/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 专为 **DeepSeek Harness (`dsh`)** 打造的东方美学深度 UI 定制主题插件：**16 套中国风配色、6 套东方意境全案预设、0% 空载显卡/CPU 消耗**。
 
-不仅支持调整表面色彩，还深度适配**左侧边栏基调、右侧对话区底色与静态国风底纹、思考过程展示卡片（含楷体手批）、输入框框体造型、发送按钮形状、用户气泡造型**，以及**软件名称（含字号/特效）、首页欢迎语、艺术字体与左下角个人栏**，所有设置自动持久化至 `~/.dsh/glaze-theme.json`。
+不仅支持调整表面色彩，还深度适配**左侧边栏基调、右侧对话区底色与静态国风底纹、思考过程展示卡片（含楷体手批）、输入框框体造型与不透明度、发送按钮形状、用户气泡造型**，以及**软件名称（含字号/特效）、首页欢迎语、艺术字体与左下角个人栏**，所有设置自动持久化至 `~/.dsh/glaze-theme.json`。
+
+---
+
+## 效果预览
+
+| 千里江山 · 浅色无界大连屏 | 宋韵汝窑 · 深色冰裂开片 | 5-Tab 深度 UI 定制面板 |
+| :---: | :---: | :---: |
+| ![千里江山浅色无界](assets/preview-qianli-light.png) | ![宋韵汝窑深色](assets/preview-ruyao-dark.png) | ![深度UI定制面板](assets/preview-customizer.png) |
 
 ---
 
@@ -39,10 +54,22 @@
 
 ## 安装方法
 
+### 方式 1：从 GitHub Release 预构建包安装（推荐 · 免构建）
+
 ```bash
-dsh plugin --profile web add <仓库路径或 github:你的用户名/dsh-glaze-theme>
+dsh plugin --profile web add https://github.com/lbg2002/dsh-glaze-theme/releases/download/v0.3.1/dsh-glaze-theme-0.3.1.tgz
 ```
-确认 `~/.dsh/profiles/web/package.json` 的 `dsh.profile.bundles` 包含 `"dsh-glaze-theme"`（或直接运行 `node scripts/install-local.mjs web`），随后重启 DeepSeek Harness 服务即可。
+
+### 方式 2：从插件市场或 GitHub 源码安装
+
+* 在 **插件 → 插件市场（主题 Tab）** 搜索 `dsh-glaze-theme` 一键安装（收录于 `awesome-dsh-plugin` 社区目录后即可搜索）。
+* 或通过 CLI 从 GitHub 源码安装：
+
+```bash
+dsh plugin --profile web add github:lbg2002/dsh-glaze-theme
+```
+
+确认 `~/.dsh/profiles/web/package.json` 的 `dsh.profile.bundles` 包含 `"dsh-glaze-theme"`（本地开发时可运行 `node scripts/install-local.mjs web`），随后重启 `dsh web` / 服务即可。
 
 ## 开发与测试
 
