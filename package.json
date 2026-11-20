@@ -1,0 +1,56 @@
+{
+  "name": "dsh-glaze-theme",
+  "version": "0.1.0",
+  "description": "瓷釉 Glaze for DeepSeek Harness — 低消耗莫兰迪配色、艺术字体、无模糊质感层与全界面品牌/欢迎语/头像自定义主题插件",
+  "type": "module",
+  "main": "./lib/index.js",
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "default": "./lib/client.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [],
+      "platform": "web",
+      "immediately": true
+    }
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test test/smoke.test.mjs",
+    "install:local": "node scripts/install-local.mjs"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "dsh-theme",
+    "deepseek-harness",
+    "theme",
+    "glaze",
+    "morandi",
+    "oklch",
+    "custom-brand",
+    "low-overhead"
+  ],
+  "license": "MIT",
+  "files": [
+    "cordis.patch.yml",
+    "lib/",
+    "src/",
+    "scripts/install-local.mjs",
+    "README.md",
+    "README.en.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}
